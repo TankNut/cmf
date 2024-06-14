@@ -43,8 +43,8 @@ function ENT:InitLegs()
 end
 
 function ENT:PerformLegIK(index, leg)
-	local target = leg.Pos--self["GetFootPos" .. index](self)
-	local targetNormal = leg.Normal--self["GetFootNormal" .. index](self)
+	local target = leg.Pos
+	local targetNormal = leg.Normal
 
 	local length1, length2 = self.UpperLength, self.LowerLength
 
