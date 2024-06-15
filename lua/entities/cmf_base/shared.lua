@@ -76,6 +76,7 @@ function ENT:CreateSeat()
 	self.Seat:SetLocalAngles(Angle(0, -90, 0))
 
 	self.Seat:SetSolid(SOLID_NONE)
+	self.Seat:SetRenderMode(RENDERMODE_NONE)
 
 	self:DeleteOnRemove(self.Seat)
 	self:SetSeat(self.Seat)
@@ -200,6 +201,10 @@ if CLIENT then
 			zfar = zfar,
 			drawviewer = self:GetSeat():GetThirdPersonMode()
 		}
+	end
+
+	function ENT:PrePlayerDraw(ply, flags)
+		return true
 	end
 else
 	function ENT:Use(ply)

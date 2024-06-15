@@ -6,6 +6,7 @@ include("sh_hook.lua")
 
 if CLIENT then
 	cmf:Hook("CalcView")
+	cmf:Hook("PrePlayerDraw")
 end
 
 function cmf:GetMech(ply)
