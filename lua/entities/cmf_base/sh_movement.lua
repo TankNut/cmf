@@ -30,7 +30,7 @@ function ENT:GetDesiredMoveSpeed(ply)
 end
 
 function ENT:GetMoveFraction()
-	return math.min(self:GetVelocity():Length2D() / 150, 1)
+	return math.min(self:GetMoveVelocity():Length2D() / 150, 1)
 end
 
 if SERVER then
