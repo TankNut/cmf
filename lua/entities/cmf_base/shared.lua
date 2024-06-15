@@ -22,7 +22,7 @@ ENT.LowerLength = 85
 ENT.TurnRate = 90
 
 ENT.Mins = Vector(-48, -48, -16)
-ENT.Maxs = Vector(48, 48, 62)
+ENT.Maxs = Vector(48, 48, 55)
 
 ENT.BODY = 0
 ENT.LEG_LEFT = 1
