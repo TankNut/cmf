@@ -76,10 +76,16 @@ function ENT:UpdateLegs()
 
 		leg.Cycle = (walkCycle + leg.CycleOffset) % 1
 
+		local lastMoving = leg.Moving
+
 		if fraction < 0.1 then
 			leg.Moving = false
 		else
 			leg.Moving = leg.Cycle > groundFraction
+		end
+
+		if SERVER and not leg.Moving and leg.Moving != lastMoving then
+			self:EmitSound(")sfx_footfall_generic.wav", 100, math.Rand(95, 105))
 		end
 
 		local origin = self:LocalToWorld(Vector(0, sideOffset, 0))
