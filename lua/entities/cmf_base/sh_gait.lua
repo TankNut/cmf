@@ -59,7 +59,7 @@ function ENT:UpdateLegs()
 	local vel = baseVel:Length2D()
 
 	local strideOffset = remapC(baseVel:Dot(self:GetForward()), -530, 530, 0.2, -0.2)
-	local liftFraction = remapC(vel, 200, 530, 0.4, 0.6)
+	local liftFraction = math.max(math.Remap(vel, 200, 530, 0.4, 0.6), 0.4)
 	local groundFraction = 1 - liftFraction
 
 	local strideAngle = math.asin(height / maxLength)
@@ -69,7 +69,6 @@ function ENT:UpdateLegs()
 	local strideVelocity = baseVel:GetNormalized() * math.min(vel, strideLength)
 
 	local fraction = entTable.GetMoveFraction(self)
-
 	local walkCycle = entTable.GetWalkCycle(self) + delta * increase
 
 	for k, leg in pairs(entTable.Legs) do
