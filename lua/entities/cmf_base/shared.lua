@@ -66,7 +66,6 @@ function ENT:CreateSeat()
 
 	self.Seat:SetModel("models/vehicles/pilot_seat.mdl")
 	self.Seat:SetKeyValue("limitview", 0, 0)
-	self.Seat:SetKeyValue("vehiclescript", "scripts/vehicles/prisoner_pod.txt")
 
 	self.Seat:Spawn()
 
