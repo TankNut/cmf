@@ -69,8 +69,6 @@ function ENT:CreatePart(part)
 	local ent = ClientsideModel(part.Model, part.RenderGroup)
 
 	ent:SetSkin(part.Skin)
-	ent:DrawShadow(true)
-	ent:UpdateShadow()
 
 	part.Entity = ent
 end
@@ -80,6 +78,8 @@ function ENT:UpdateParts()
 		if not IsValid(part.Entity) then
 			self:CreatePart(part)
 		end
+
+		part.Entity:SetNoDraw(self:IsDormant())
 
 		local pos, ang = LocalToWorld(part.Pos, part.Ang, self.Bones[part.Bone].Pos, self.Bones[part.Bone].Ang)
 
