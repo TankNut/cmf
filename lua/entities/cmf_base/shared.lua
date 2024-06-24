@@ -19,6 +19,7 @@ include("cl_parts.lua")
 include("sh_blueprint.lua")
 include("sh_bones.lua")
 include("sh_gait.lua")
+include("sh_helpers.lua")
 include("sh_hitboxes.lua")
 include("sh_legs.lua")
 include("sh_movement.lua")
@@ -83,37 +84,6 @@ function ENT:Think()
 	end
 
 	return true
-end
-
-function ENT:GetDriver()
-	return self:GetSeat():GetDriver()
-end
-
-function ENT:HasDriver()
-	return IsValid(self:GetDriver())
-end
-
-function ENT:GetLookAng()
-	local ply = self:GetDriver()
-
-	if not IsValid(ply) then
-		return self:GetAngles()
-	end
-
-	return ply:LocalEyeAngles()
-end
-
-function ENT:GetGroundTrace()
-	local pos = self:GetPos()
-
-	return util.TraceHull({
-		start = pos,
-		endpos = pos - Vector(0, 0, 56756),
-		filter = self,
-		collisiongroup = COLLISION_GROUP_WEAPON,
-		mins = Vector(-10, -10, 0),
-		maxs = Vector(10, 10, 0)
-	})
 end
 
 function ENT:OnRemove()
