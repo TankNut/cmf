@@ -28,35 +28,37 @@ function ENT:InitLegs()
 		[self.LEG_LEFT] = {
 			CycleOffset = 0,
 			Offset = 1,
-			Hip = self.Bones.LHip,
-			Knee = self.Bones.LKnee,
-			Foot = self.Bones.LFoot
+			Hip = self.Bones.lhip,
+			Knee = self.Bones.lknee,
+			Foot = self.Bones.lfoot
 		},
 		[self.LEG_RIGHT] = {
 			CycleOffset = 0.5,
 			Offset = -1,
-			Hip = self.Bones.RHip,
-			Knee = self.Bones.RKnee,
-			Foot = self.Bones.RFoot
+			Hip = self.Bones.rhip,
+			Knee = self.Bones.rknee,
+			Foot = self.Bones.rfoot
 		}
 	}
 end
 
 function ENT:PerformLegIK(index, leg)
+	local blueprint = self.Blueprint
 	local target = leg.Pos
 	local targetNormal = leg.Normal
 
-	local length1, length2 = self.UpperLength, self.LowerLength
+	local length1 = blueprint.UpperLegLength
+	local length2 = blueprint.LowerLegLength
 
 	if leg.Moving then
-		length2 = length2 + self.FootOffset
+		length2 = length2 + blueprint.FootOffset
 	else
-		target = target + targetNormal * self.FootOffset
+		target = target + targetNormal * blueprint.FootOffset
 	end
 
-	local rootBone = self.Bones[""]
+	local rootBone = self.Bones.root
 
-	local hipPos = LocalToWorld(Vector(0, self.LegSpacing * leg.Offset, 0), angle_zero, rootBone.Pos, rootBone.Ang)
+	local hipPos = LocalToWorld(Vector(0, blueprint.LegSpacing * leg.Offset, 0), angle_zero, rootBone.Pos, rootBone.Ang)
 	local axis = toLocalAxis(self, target - hipPos)
 	local dist = math.min(axis:Length(), length1 + length2)
 
@@ -86,7 +88,7 @@ function ENT:PerformLegIK(index, leg)
 		footAng:RotateAroundAxis(targetNormal, -footAng.y + self:GetAngles().y)
 	end
 
-	local footPos = kneePos + kneeAng:Forward() * self.LowerLength - footAng:Up() * self.FootOffset
+	local footPos = kneePos + kneeAng:Forward() * blueprint.LowerLegLength - footAng:Up() * blueprint.FootOffset
 
 	local offset = Vector(0, 1, 0)
 
@@ -104,28 +106,4 @@ function ENT:PerformLegIK(index, leg)
 
 	leg.Foot.Pos = footPos
 	leg.Foot.Ang = footAng
-end
-
-if CLIENT then
-	local forward = Color(255, 0, 0)
-	local right = Color(0, 255, 0)
-	local up = Color(0, 0, 255)
-
-	local length = 10
-
-	function ENT:DrawLegs()
-		for k, leg in pairs(self.Legs) do
-			render.DrawLine(leg.Hip.Pos, leg.Hip.Pos + leg.Hip.Ang:Forward() * self.UpperLength, forward)
-			render.DrawLine(leg.Hip.Pos, leg.Hip.Pos + leg.Hip.Ang:Right() * length, right)
-			render.DrawLine(leg.Hip.Pos, leg.Hip.Pos + leg.Hip.Ang:Up() * length, up)
-
-			render.DrawLine(leg.Knee.Pos, leg.Knee.Pos + leg.Knee.Ang:Forward() * self.LowerLength, forward)
-			render.DrawLine(leg.Knee.Pos, leg.Knee.Pos + leg.Knee.Ang:Right() * length, right)
-			render.DrawLine(leg.Knee.Pos, leg.Knee.Pos + leg.Knee.Ang:Up() * length, up)
-
-			render.DrawLine(leg.Foot.Pos, leg.Foot.Pos + leg.Foot.Ang:Forward() * length, forward)
-			render.DrawLine(leg.Foot.Pos, leg.Foot.Pos + leg.Foot.Ang:Right() * length, right)
-			render.DrawLine(leg.Foot.Pos, leg.Foot.Pos + leg.Foot.Ang:Up() * length, up)
-		end
-	end
 end

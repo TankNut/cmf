@@ -1,16 +1,18 @@
 AddCSLuaFile()
 
 function ENT:InitPhysics()
+	local mins, maxs = self.Blueprint.PhysboxMins, self.Blueprint.PhysboxMaxs
+
 	if IsValid(self.PhysCollide) then
 		self.PhysCollide:Destroy()
 	end
 
 	self:EnableCustomCollisions(true)
-	self:SetCollisionBounds(self.Mins, self.Maxs)
-	self.PhysCollide = CreatePhysCollideBox(self.Mins, self.Maxs)
+	self:SetCollisionBounds(mins, maxs)
+	self.PhysCollide = CreatePhysCollideBox(mins, maxs)
 
 	if SERVER then
-		self:PhysicsInitBox(self.Mins, self.Maxs, "solidmetal")
+		self:PhysicsInitBox(mins, maxs, "solidmetal")
 		self:SetSolid(SOLID_VPHYSICS)
 	end
 end
@@ -46,6 +48,6 @@ if CLIENT then
 	local color = Color(255, 191, 0)
 
 	function ENT:DrawPhysics()
-		render.DrawWireframeBox(self:GetPos(), self:GetAngles(), self.Mins, self.Maxs, color, true)
+		render.DrawWireframeBox(self:GetPos(), self:GetAngles(), self.Blueprint.PhysboxMins, self.Blueprint.PhysboxMaxs, color, true)
 	end
 end

@@ -18,7 +18,14 @@ function ENT:Initialize()
 	local mech = self:GetOwner()
 
 	table.insert(mech.Hitboxes, self)
-	table.insert(mech.HitboxBones[self:GetHitboxIndex()], self)
+
+	local index = self:GetHitboxIndex()
+
+	if not mech.HitboxBones[index] then
+		mech.HitboxBones[index] = {}
+	end
+
+	table.insert(mech.HitboxBones[index], self)
 
 	local mins, maxs = self:GetHitboxMins(), self:GetHitboxMaxs()
 

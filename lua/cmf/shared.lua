@@ -1,8 +1,17 @@
 AddCSLuaFile()
 
-cmf = cmf or {}
+cmf = cmf or {
+	Meta = {}
+}
 
+include("meta/sh_blueprint.lua")
+include("meta/sh_bone.lua")
+include("meta/sh_hitbox.lua")
+include("meta/sh_part.lua")
+
+include("sh_callbacks.lua")
 include("sh_hook.lua")
+include("sh_pack.lua")
 
 if CLIENT then
 	cmf:Hook("CalcView")

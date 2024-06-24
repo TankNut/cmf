@@ -14,7 +14,8 @@ function ENT:TraceDirection(distance, offset, direction, trace)
 end
 
 function ENT:FindGround(pos, origin)
-	local maxLength = self.UpperLength + self.LowerLength
+	local blueprint = self.Blueprint
+	local maxLength = blueprint.UpperLegLength + blueprint.LowerLegLength
 	local traceOrigin = Vector(pos)
 	traceOrigin.z = self:GetPos().z
 
@@ -28,7 +29,7 @@ function ENT:FindGround(pos, origin)
 		local dist = trace.HitPos:Distance(origin)
 
 		-- NaN check
-		if dist < math.abs(self.UpperLength - self.LowerLength - self.FootOffset) then
+		if dist < math.abs(blueprint.UpperLegLength - blueprint.LowerLegLength - blueprint.FootOffset) then
 			return pos, self:GetUp()
 		end
 
@@ -44,14 +45,16 @@ local function remapC(val, inMin, inMax, outMin, outMax)
 	return math.Clamp(val, math.min(outMin, outMax), math.max(outMin, outMax))
 end
 
-function ENT:UpdateLegs()
+function ENT:RunGait()
 	local entTable = self:GetTable()
+	local blueprint = self.Blueprint
+
 	local delta = CurTime() - entTable.LastGaitUpdate
 
 	entTable.LastGaitUpdate = CurTime()
 
 	local height = entTable.GetGroundOffset(self)
-	local maxLength = entTable.UpperLength + entTable.LowerLength
+	local maxLength = blueprint.UpperLegLength + blueprint.LowerLegLength
 
 	local baseVel = entTable.GetMoveVelocity(self)
 	baseVel.z = 0
@@ -72,7 +75,7 @@ function ENT:UpdateLegs()
 	local walkCycle = entTable.GetWalkCycle(self) + delta * increase
 
 	for k, leg in pairs(entTable.Legs) do
-		local sideOffset = entTable.LegSpacing * leg.Offset
+		local sideOffset = blueprint.LegSpacing * leg.Offset
 
 		leg.Cycle = (walkCycle + leg.CycleOffset) % 1
 

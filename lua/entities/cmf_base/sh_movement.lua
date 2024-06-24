@@ -1,14 +1,5 @@
 AddCSLuaFile()
 
-function ENT:InitMovement()
-	if SERVER then
-		self.MoveData = {
-			LastUpdate = CurTime(),
-			Velocity = Vector()
-		}
-	end
-end
-
 function ENT:GetMoveVelocity()
 	if CLIENT then
 		return self:GetMechVelocity()
@@ -18,7 +9,7 @@ function ENT:GetMoveVelocity()
 end
 
 function ENT:GetGroundOffset()
-	return 110
+	return self.Blueprint.StandHeight
 end
 
 function ENT:GetMoveAcceleration()
@@ -116,10 +107,14 @@ if SERVER then
 
 		local direction = right - left
 
-		return data.Yaw - (direction * self.TurnRate * data.Delta)
+		return data.Yaw - (direction * self.Blueprint.TurnRate * data.Delta)
 	end
 
 	function ENT:PhysicsUpdate(phys)
+		if not self.Loaded then
+			return
+		end
+
 		local data = self.MoveData
 
 		data.Phys = phys

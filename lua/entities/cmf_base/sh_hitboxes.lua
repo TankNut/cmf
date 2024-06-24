@@ -1,26 +1,5 @@
 AddCSLuaFile()
 
-function ENT:InitHitboxes()
-	self.Hitboxes = {}
-
-	if SERVER then
-		self:CreateHitbox("Torso", Vector(-30, 0, -5), Angle(0, 0, 0), Vector(120, 60, 38))
-		self:CreateHitbox("Torso", Vector(2.5, 0, -5), Angle(-90, 0, 0), Vector(55, 40, 40))
-		self:CreateHitbox("Torso", Vector(-20, 0, 13), Angle(0, 0, 0), Vector(40, 100, 15))
-
-		self:CreateHitbox("Weapons", Vector(-28, 65, 1), Angle(0, 0, -90), Vector(60, 47, 30))
-		self:CreateHitbox("Weapons", Vector(-28, -65, 1), Angle(0, 0, 90), Vector(60, 47, 30))
-
-		self:CreateHitbox("LHip",  Vector(-13, -12, 5), Angle(0, 0, 0),   Vector(self.UpperLength + 25, 13, 30))
-		self:CreateHitbox("LKnee", Vector(-10, 0, -5),  Angle(-10, 0, 0), Vector(self.LowerLength + 10, 20, 30))
-		self:CreateHitbox("LFoot", Vector(2, 2, 0),     Angle(-90, 0, 0), Vector(self.FootOffset, 40, 55))
-
-		self:CreateHitbox("RHip",  Vector(-13, 12.5, 5), Angle(0, 0, 0),   Vector(self.UpperLength + 25, 13, 30))
-		self:CreateHitbox("RKnee", Vector(-10, 0, -5),   Angle(-10, 0, 0), Vector(self.LowerLength + 10, 20, 30))
-		self:CreateHitbox("RFoot", Vector(2, -2, 0),     Angle(-90, 0, 0), Vector(self.FootOffset, 40, 55))
-	end
-end
-
 function ENT:UpdateHitboxes()
 	for bone, group in pairs(self.HitboxBones) do
 		local bonePos = self.Bones[bone].Pos

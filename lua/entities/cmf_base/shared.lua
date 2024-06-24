@@ -9,76 +9,53 @@ ENT.Author = "TankNut"
 ENT.Category = "Custom Mech Framework"
 
 ENT.Spawnable = true
-
 ENT.DisableDuplicator = true
-
-ENT.LegSpacing = 35
-
-ENT.FootOffset = 10
-
-ENT.UpperLength = 38
-ENT.LowerLength = 85
-
-ENT.TurnRate = 90
-
-ENT.Mins = Vector(-48, -48, -16)
-ENT.Maxs = Vector(48, 48, 55)
 
 ENT.BODY = 0
 ENT.LEG_LEFT = 1
 ENT.LEG_RIGHT = 2
 
 include("cl_parts.lua")
-
+include("sh_blueprint.lua")
 include("sh_bones.lua")
 include("sh_gait.lua")
 include("sh_hitboxes.lua")
-include("sh_ik.lua")
+include("sh_legs.lua")
 include("sh_movement.lua")
 include("sh_physics.lua")
 
 function ENT:Initialize()
 	self:SetModel("models/props_lab/cactus.mdl")
 
-	self:InitPhysics()
-	self:InitMovement()
+	self.Bones = {}
 
-	self:InitBones()
-	self:InitHitboxes()
-
-	self:InitLegs()
+	self.Hitboxes = {}
+	self.HitboxBones = {}
 
 	if CLIENT then
-		-- Bit excessive but rather safe than sorry
-		local radius = math.max(self.UpperLength + self.LowerLength + self.FootOffset * 1.5, (self.Maxs - self.Mins):Length() * 0.5)
+		self.Parts = {}
 
-		self:InitParts()
-		self:SetRenderBounds(Vector(-radius, -radius, -radius), Vector(radius, radius, radius))
+		if self.Blueprint then
+			self:LoadBlueprint()
+		else
+			self:RequestBlueprint()
+		end
+
+		return
 	else
-		self:CreateSeat()
 		self:SetUseType(SIMPLE_USE)
 	end
-end
 
-function ENT:CreateSeat()
-	self.Seat = ents.Create("prop_vehicle_prisoner_pod")
-	self.Seat._Mech = self
+	if not self.Blueprint then
+		-- Error out, currently loads a pre-defined blueprint for testing
+		self.Blueprint = cmf:LoadBlueprint("cmf/test.json")
+	end
 
-	self.Seat:SetModel("models/vehicles/pilot_seat.mdl")
-	self.Seat:SetKeyValue("limitview", 0, 0)
+	self:CreateSeat()
+	self:LoadBlueprint()
 
-	self.Seat:Spawn()
-
-	self.Seat:SetParent(self)
-
-	self.Seat:SetLocalPos(Vector(20, 0, -10))
-	self.Seat:SetLocalAngles(Angle(0, -90, 0))
-
-	self.Seat:SetSolid(SOLID_NONE)
-	self.Seat:SetRenderMode(RENDERMODE_NONE)
-
-	self:DeleteOnRemove(self.Seat)
-	self:SetSeat(self.Seat)
+	-- Encode and compress once so people can easily request it later
+	self.BlueprintCache = util.Compress(cmf:Encode(self.Blueprint))
 end
 
 function ENT:SetupDataTables()
@@ -90,17 +67,20 @@ function ENT:SetupDataTables()
 end
 
 function ENT:Think()
+	self:NextThink(CurTime())
 	self:PhysWake()
 
+	if not self.Loaded then
+		return true
+	end
+
 	self:UpdateBones()
-	self:UpdateLegs()
+	self:RunGait()
 	self:UpdateHitboxes()
 
 	if CLIENT then
 		self:UpdateParts()
 	end
-
-	self:NextThink(CurTime())
 
 	return true
 end
@@ -146,20 +126,18 @@ function ENT:OnRemove()
 	end
 end
 
-function ENT:OnReloaded()
-	if CLIENT then
-		self:InitParts()
-	end
-end
-
 if CLIENT then
 	local convar = GetConVar("developer")
 
 	function ENT:Draw()
+		if not self.Loaded then
+			return
+		end
+
 		if convar:GetBool() then
 			self:DrawPhysics()
 			self:DrawHitboxes()
-			self:DrawLegs()
+			self:DrawBones()
 		end
 	end
 
@@ -201,12 +179,32 @@ if CLIENT then
 			drawviewer = self:GetSeat():GetThirdPersonMode()
 		}
 	end
-
-	function ENT:PrePlayerDraw(ply, flags)
-		return true
-	end
 else
+	function ENT:CreateSeat()
+		self.Seat = ents.Create("prop_vehicle_prisoner_pod")
+		self.Seat._Mech = self
+
+		self.Seat:SetModel("models/vehicles/pilot_seat.mdl")
+		self.Seat:SetKeyValue("limitview", 0, 0)
+
+		self.Seat:Spawn()
+
+		self.Seat:SetParent(self)
+
+		self.Seat:SetLocalPos(vector_origin)
+		self.Seat:SetLocalAngles(angle_zero)
+
+		self.Seat:SetSolid(SOLID_NONE)
+
+		self:DeleteOnRemove(self.Seat)
+		self:SetSeat(self.Seat)
+	end
+
 	function ENT:Use(ply)
+		if not self.Loaded then
+			return
+		end
+
 		if not ply:KeyPressed(IN_USE) or self:HasDriver() then
 			return
 		end
