@@ -88,8 +88,6 @@ if CLIENT then
 	local length = 10
 
 	function ENT:DrawBones()
-		local blueprints = self.Blueprint.Bones
-
 		for name, bone in pairs(self.Bones) do
 			local pos = bone.Pos
 			local ang = bone.Ang
@@ -98,10 +96,8 @@ if CLIENT then
 			render.DrawLine(pos, pos + ang:Right() * length, right)
 			render.DrawLine(pos, pos + ang:Up() * length, up)
 
-			local blueprint = blueprints[name]
-
-			if blueprint and blueprint.Parent != "" then
-				render.DrawLine(pos, self.Bones[blueprint.Parent].Pos, tree)
+			if bone.Blueprint and bone.Blueprint.Parent != "" then
+				render.DrawLine(pos, self.Bones[bone.Blueprint.Parent].Pos, tree)
 			end
 		end
 	end
