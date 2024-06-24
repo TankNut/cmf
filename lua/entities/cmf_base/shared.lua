@@ -111,6 +111,10 @@ if CLIENT then
 		end
 	end
 
+	function ENT:PrePlayerDraw(ply, flags)
+		return true
+	end
+
 	function ENT:CalcView(ply, origin, angles, fov, znear, zfar)
 		if ply:GetViewEntity() != ply then
 			return
@@ -162,8 +166,9 @@ else
 		self.Seat:SetParent(self)
 
 		self.Seat:SetLocalPos(vector_origin)
-		self.Seat:SetLocalAngles(angle_zero)
+		self.Seat:SetLocalAngles(Angle(0, -90, 0))
 
+		self.Seat:SetRenderMode(RENDERMODE_NONE)
 		self.Seat:SetSolid(SOLID_NONE)
 
 		self:DeleteOnRemove(self.Seat)

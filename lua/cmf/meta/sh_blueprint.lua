@@ -18,12 +18,6 @@ local fields = {
 	WalkSpeed = 200,
 	Acceleration = 400,
 
-	-- Seat
-	DrawSeat = true,
-	SeatBone = "_root",
-	SeatOffset = Vector(),
-	SeatAngle = Angle(),
-
 	-- Legs
 	LegSpacing = 0,
 	UpperLegLength = 0,
