@@ -1,8 +1,6 @@
 AddCSLuaFile()
 
 function ENT:LoadBlueprint()
-	print("Loading blueprint", self)
-
 	self:InitPhysics()
 	self:LoadBones()
 
