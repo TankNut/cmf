@@ -6,6 +6,7 @@ function ENT:CreateBone(name)
 		Pos = Vector(),
 		Ang = Angle(),
 		LastUpdate = FrameNumber(),
+		Blueprint = self.Blueprint.Bones[name]
 	}
 
 	self.Bones[name] = bone
@@ -30,10 +31,12 @@ function ENT:LoadBones()
 	end
 end
 
-function ENT:UpdateBone(bone, blueprint, frame)
+function ENT:UpdateBone(bone, frame)
 	if bone.LastUpdate == frame then
 		return
 	end
+
+	local blueprint = bone.Blueprint
 
 	local originPos = self:GetPos()
 	local originAng = self:GetAngles()
@@ -45,7 +48,7 @@ function ENT:UpdateBone(bone, blueprint, frame)
 		local parent = self.Bones[blueprint.Parent]
 
 		if parent then
-			self:UpdateBone(parent, self.Blueprint.Bones[bone.Parent], frame)
+			self:UpdateBone(parent, frame)
 
 			originPos = parent.Pos
 			originAng = parent.Ang
@@ -55,7 +58,7 @@ function ENT:UpdateBone(bone, blueprint, frame)
 		offsetAng = blueprint.Angle
 
 		if blueprint.Callback != "" then
-			cmf:RunBoneCallback(self, bone, blueprint, originPos, originAng)
+			cmf:RunBoneCallback(self, bone, originPos, originAng)
 
 			bone.LastUpdate = frame
 
@@ -68,11 +71,10 @@ function ENT:UpdateBone(bone, blueprint, frame)
 end
 
 function ENT:UpdateBones()
-	local blueprint = self.Blueprint.Bones
 	local frame = FrameNumber()
 
 	for _, bone in pairs(self.Bones) do
-		self:UpdateBone(bone, blueprint[bone.Name], frame)
+		self:UpdateBone(bone, frame)
 	end
 end
 

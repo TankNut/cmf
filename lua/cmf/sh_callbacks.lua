@@ -1,12 +1,13 @@
 AddCSLuaFile()
 
-local rootMovement = function(ent, bone, blueprint, originPos, originAng)
+local rootMovement = function(ent, bone, originPos, originAng)
 	local pos, ang = ent:GetRootBoneOffset()
 
 	bone.Pos, bone.Ang = LocalToWorld(pos, ang, originPos, originAng)
 end
 
-local torsoCallback = function(ent, bone, blueprint, originPos, originAng)
+local torsoCallback = function(ent, bone, originPos, originAng)
+	local blueprint = bone.Blueprint
 	local ply = ent:GetDriver()
 
 	bone.Pos = LocalToWorld(blueprint.Offset, angle_zero, originPos, originAng)
@@ -22,7 +23,8 @@ local torsoCallback = function(ent, bone, blueprint, originPos, originAng)
 	end
 end
 
-local weaponCallback = function(ent, bone, blueprint, originPos, originAng)
+local weaponCallback = function(ent, bone, originPos, originAng)
+	local blueprint = bone.Blueprint
 	local ply = ent:GetDriver()
 
 	bone.Pos = LocalToWorld(blueprint.Offset, angle_zero, originPos, originAng)
@@ -43,8 +45,9 @@ local callbacks = {
 	["builtin/weapons/pitch_yaw"] = weaponCallback
 }
 
-function cmf:RunBoneCallback(ent, bone, blueprint, originPos, originAng)
+function cmf:RunBoneCallback(ent, bone, originPos, originAng)
+	local blueprint = bone.Blueprint
 	local callback = callbacks[blueprint.Callback]
 
-	callback(ent, bone, blueprint, originPos, originAng)
+	callback(ent, bone, originPos, originAng)
 end
