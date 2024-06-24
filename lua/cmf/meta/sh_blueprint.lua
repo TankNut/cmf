@@ -14,6 +14,9 @@ local fields = {
 	-- Movement
 	StandHeight = 0,
 	TurnRate = 90,
+	RunSpeed = 530,
+	WalkSpeed = 200,
+	Acceleration = 400,
 
 	-- Seat
 	DrawSeat = true,

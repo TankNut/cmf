@@ -17,7 +17,7 @@ function ENT:GetMoveAcceleration()
 end
 
 function ENT:GetDesiredMoveSpeed(ply)
-	return ply:KeyDown(IN_SPEED) and 530 or 200
+	return ply:KeyDown(IN_SPEED) and self.Blueprint.RunSpeed or self.Blueprint.WalkSpeed
 end
 
 function ENT:GetMoveFraction()
@@ -87,7 +87,7 @@ if SERVER then
 		local data = self.MoveData
 		local vel = data.Velocity
 
-		local accel = 400 * data.Delta
+		local accel = self.Blueprint.Acceleration * data.Delta
 		local target = self:GetDesiredVelocity()
 		local dot = self:GetForward():Dot(data.GroundTrace.HitNormal)
 

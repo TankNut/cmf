@@ -79,6 +79,8 @@ function ENT:UpdateBones()
 end
 
 function ENT:GetRootBoneOffset()
+	local run = self.Blueprint.RunSpeed
+
 	local vel = self:GetVelocity()
 	local fraction = self:GetMoveFraction()
 	local cycle = self:GetWalkCycle()
@@ -91,19 +93,19 @@ function ENT:GetRootBoneOffset()
 	do -- Walkcycle bob
 		local offset = 0.1
 
-		local magnitude = math.Remap(length, 0, 530, 15, 10)
+		local magnitude = math.Remap(length, 0, run, 15, 10)
 		local radians = math.Remap((cycle + offset) % 1, 0, 0.5, -math.pi, math.pi)
 
 		pos.z = pos.z + math.sin(radians) * magnitude * fraction
 	end
 
 	-- Sideways velocity roll
-	ang.r = ang.r + math.Remap(vel:Dot(-self:GetRight()), -530, 530, -15, 15)
+	ang.r = ang.r + math.Remap(vel:Dot(-self:GetRight()), -run, run, -15, 15)
 
 	do -- Walkcycle roll
 		local offset = 0.125
 
-		local magnitude = math.Remap(length, 0, 530, 5, 10)
+		local magnitude = math.Remap(length, 0, run, 5, 10)
 		local radians = math.Remap((cycle + offset) % 1, 0, 1, -math.pi, math.pi)
 
 		ang.r = ang.r + math.sin(radians) * magnitude * fraction
