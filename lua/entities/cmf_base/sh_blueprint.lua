@@ -6,13 +6,22 @@ function ENT:LoadBlueprint()
 
 	self:InitLegs()
 
-	if SERVER then
+	local blueprint = self.Blueprint
+
+	if CLIENT then
+		local radius = math.max(
+			blueprint.UpperLegLength + blueprint.LowerLegLength + blueprint.FootOffset * 1.5,
+			(blueprint.PhysboxMaxs - blueprint.PhysboxMins):Length() * 0.5
+		)
+
+		self:SetRenderBounds(Vector(-radius, -radius, -radius), Vector(radius, radius, radius))
+	else
 		self.MoveData = {
 			LastUpdate = CurTime(),
 			Velocity = Vector()
 		}
 
-		for _, hitbox in pairs(self.Blueprint.Hitboxes) do
+		for _, hitbox in pairs(blueprint.Hitboxes) do
 			self:CreateHitbox(hitbox.Bone, hitbox.Offset, hitbox.Angle, hitbox.Size)
 		end
 	end
