@@ -12,10 +12,6 @@ function ENT:GetGroundOffset()
 	return self.Blueprint.StandHeight
 end
 
-function ENT:GetMoveAcceleration()
-	return 400
-end
-
 function ENT:GetDesiredMoveSpeed(ply)
 	return ply:KeyDown(IN_SPEED) and self.Blueprint.RunSpeed or self.Blueprint.WalkSpeed
 end
