@@ -44,8 +44,8 @@ function meta:GetMinimized()
 	return copy
 end
 
-function meta:Load(tbl)
-	for key, value in pairs(tbl) do
+function meta:Load(tab)
+	for key, value in pairs(tab) do
 		if TypeID(value) == TypeID(fields[key]) then
 			self[key] = value
 		end

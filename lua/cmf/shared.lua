@@ -4,6 +4,8 @@ cmf = cmf or {
 	Meta = {}
 }
 
+include("editor/shared.lua")
+
 include("meta/sh_blueprint.lua")
 include("meta/sh_bone.lua")
 include("meta/sh_hitbox.lua")
