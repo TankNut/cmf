@@ -9,7 +9,7 @@ local meta = cmf.Meta.Blueprint
 local fields = {
 	Name = "Unnamed Mech",
 	Author = "Unknown",
-	Revision = 1,
+	Version = "v1",
 
 	-- Movement
 	StandHeight = 0,
