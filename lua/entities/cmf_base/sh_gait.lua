@@ -66,7 +66,7 @@ function ENT:RunGait()
 	local vel = baseVel:Length2D()
 
 	local strideOffset = remapC(baseVel:Dot(self:GetForward()), -blueprint.RunSpeed, blueprint.RunSpeed, 0.2, -0.2)
-	local liftFraction = math.max(math.Remap(vel, blueprint.WalkSpeed, blueprint.RunSpeed, 0.4, 0.6), 0.4)
+	local liftFraction = remapC(vel, blueprint.WalkSpeed, blueprint.RunSpeed, 0.4, 0.6)
 	local groundFraction = 1 - liftFraction
 
 	local strideAngle = math.asin(height / maxLength)
