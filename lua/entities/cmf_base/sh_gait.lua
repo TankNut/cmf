@@ -13,15 +13,19 @@ function ENT:TraceDirection(distance, offset, direction, trace)
 	end
 end
 
+local down = Vector(0, 0, -1)
+local groundMin = Vector(-5, -5, 0)
+local groundMax = Vector(5, 5, 0)
+
 function ENT:FindGround(pos, origin)
 	local blueprint = self.Blueprint
 	local maxLength = blueprint.UpperLegLength + blueprint.LowerLegLength
 	local traceOrigin = Vector(pos)
 	traceOrigin.z = self:GetPos().z
 
-	local trace = self:TraceDirection(maxLength * 1.5, traceOrigin, Vector(0, 0, -1), {
-		mins = Vector(-5, -5, 0),
-		maxs = Vector(5, 5, 0),
+	local trace = self:TraceDirection(maxLength * 1.5, traceOrigin, down, {
+		mins = groundMin,
+		maxs = groundMax,
 		filter = function(ent) return ent != self and ent:GetOwner() != self end
 	})
 
@@ -72,7 +76,7 @@ function ENT:RunGait()
 	local strideVelocity = baseVel:GetNormalized() * math.min(vel, strideLength)
 
 	local fraction = entTable.GetMoveFraction(self)
-	local walkCycle = entTable.GetWalkCycle(self) + delta * increase
+	local walkCycle = entTable.GetWalkCycle(self) + increase * delta
 
 	for k, leg in pairs(entTable.Legs) do
 		local sideOffset = blueprint.LegSpacing * leg.Offset
