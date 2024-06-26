@@ -114,31 +114,31 @@ function meta:Save(path)
 	file.Write(path, util.TableToJSON(self:GetMinimized(), true))
 end
 
-function meta:Load(tbl)
-	for key, value in pairs(tbl) do
+function meta:Load(tab)
+	for key, value in pairs(tab) do
 		if TypeID(value) == TypeID(fields[key]) then
 			self[key] = value
 		end
 	end
 
-	if tbl.Bones then
-		for name, data in pairs(tbl.Bones) do
+	if tab.Bones then
+		for name, data in pairs(tab.Bones) do
 			local bone = self:CreateBone(name)
 
 			bone:Load(data)
 		end
 	end
 
-	if tbl.Hitboxes then
-		for _, data in pairs(tbl.Hitboxes) do
+	if tab.Hitboxes then
+		for _, data in pairs(tab.Hitboxes) do
 			local hitbox = self:AddHitbox()
 
 			hitbox:Load(data)
 		end
 	end
 
-	if tbl.Parts then
-		for _, data in pairs(tbl.Parts) do
+	if tab.Parts then
+		for _, data in pairs(tab.Parts) do
 			local part = self:AddPart()
 
 			part:Load(data)
