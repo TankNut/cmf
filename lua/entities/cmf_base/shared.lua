@@ -150,7 +150,7 @@ if CLIENT then
 			fov = fov,
 			znear = znear,
 			zfar = zfar,
-			drawviewer = self:GetSeat():GetThirdPersonMode()
+			drawviewer = seat:GetThirdPersonMode()
 		}
 	end
 else
@@ -170,6 +170,7 @@ else
 
 		self.Seat:SetRenderMode(RENDERMODE_NONE)
 		self.Seat:SetSolid(SOLID_NONE)
+		self.Seat:DrawShadow(false)
 
 		self:DeleteOnRemove(self.Seat)
 		self:SetSeat(self.Seat)
