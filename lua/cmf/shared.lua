@@ -4,6 +4,14 @@ cmf = cmf or {
 	Meta = {}
 }
 
+function cmf:IncludeClient(path)
+	AddCSLuaFile(path)
+
+	if CLIENT then
+		return include(path)
+	end
+end
+
 include("editor/shared.lua")
 
 include("meta/sh_blueprint.lua")

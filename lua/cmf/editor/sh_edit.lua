@@ -6,9 +6,10 @@ end
 
 local PANEL = {}
 
-function PANEL:Setup(tab, fields)
+function PANEL:Setup(tab, fields, context)
 	self.Table = tab
 	self.Fields = fields
+	self.Context = context
 
 	self:Rebuild()
 end
@@ -23,6 +24,8 @@ end
 
 function PANEL:AddVar(key, data)
 	local row = self:CreateRow(data.category or "General", data.title)
+
+	data.context = self.Context or {}
 
 	row:Setup(data.type, data)
 
@@ -49,9 +52,9 @@ function PANEL:Init()
 	self:Center()
 end
 
-function PANEL:Setup(title, tab, fields)
+function PANEL:Setup(title, tab, fields, context)
 	self:SetTitle(title)
-	self.Props:Setup(tab, fields)
+	self.Props:Setup(tab, fields, context)
 end
 
 vgui.Register("cmf_edit", PANEL, "DFrame")
