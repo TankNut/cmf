@@ -62,8 +62,8 @@ function PANEL:AddGeneralNode(title, icon, fields)
 	end
 end
 
-function PANEL:AddSubNode(parent, title, icon, object, fields, context)
-	local node = parent:AddNode(title, icon)
+function PANEL:AddSubNode(parent, name, title, icon, object, fields, context)
+	local node = parent:AddNode(name, icon)
 
 	node.Label.DoDoubleClick = function()
 		self:OpenNode(title, object, fields, context)
@@ -93,7 +93,7 @@ function PANEL:PopulateBones(expand)
 	self.Bones:Clear()
 
 	for name, bone in SortedPairs(self.Blueprint.Bones) do
-		local node = self:AddSubNode(self.Bones, name, "icon16/connect.png", bone, boneFields, {
+		local node = self:AddSubNode(self.Bones, name, "Bone: " .. name, "icon16/connect.png", bone, boneFields, {
 			IsBone = true,
 			Name = name,
 			Bone = bone,
