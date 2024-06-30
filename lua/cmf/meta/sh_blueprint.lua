@@ -80,7 +80,7 @@ function meta:GetMinimized()
 	return copy
 end
 
-function meta:CreateBone(name)
+function meta:AddBone(name)
 	local bone = setmetatable({}, cmf.Meta.Bone)
 
 	self.Bones[name] = bone
@@ -123,7 +123,7 @@ function meta:Load(tab)
 
 	if tab.Bones then
 		for name, data in pairs(tab.Bones) do
-			local bone = self:CreateBone(name)
+			local bone = self:AddBone(name)
 
 			bone:Load(data)
 		end
