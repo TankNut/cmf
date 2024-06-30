@@ -89,6 +89,22 @@ function meta:AddBone(name)
 	return bone
 end
 
+function meta:RemoveBone(name)
+	self.Bones[name] = nil
+
+	for _, hitbox in pairs(self.Hitboxes) do
+		if hitbox.Bone == name then
+			hitbox.Bone = "root"
+		end
+	end
+
+	for _, part in pairs(self.Parts) do
+		if part.Bone == name then
+			part.Bone = "root"
+		end
+	end
+end
+
 function meta:AddHitbox()
 	local hitbox = setmetatable({}, cmf.Meta.Hitbox)
 
