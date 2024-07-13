@@ -9,11 +9,11 @@ function ENT:GetMoveVelocity()
 end
 
 function ENT:GetGroundOffset()
-	return self.Blueprint.StandHeight
+	return self.Mech.StandHeight
 end
 
 function ENT:GetDesiredMoveSpeed(ply)
-	return ply:KeyDown(IN_SPEED) and self.Blueprint.RunSpeed or self.Blueprint.WalkSpeed
+	return ply:KeyDown(IN_SPEED) and self.Mech.RunSpeed or self.Mech.WalkSpeed
 end
 
 function ENT:GetMoveFraction()
@@ -83,7 +83,7 @@ if SERVER then
 		local data = self.MoveData
 		local vel = data.Velocity
 
-		local accel = self.Blueprint.Acceleration * data.Delta
+		local accel = self.Mech.Acceleration * data.Delta
 		local target = self:GetDesiredVelocity()
 		local dot = self:GetForward():Dot(data.GroundTrace.HitNormal)
 
@@ -103,11 +103,11 @@ if SERVER then
 
 		local direction = right - left
 
-		return data.Yaw - (direction * self.Blueprint.TurnRate * data.Delta)
+		return data.Yaw - (direction * self.Mech.TurnRate * data.Delta)
 	end
 
 	function ENT:PhysicsUpdate(phys)
-		if not self.Loaded then
+		if not self.Mech then
 			return
 		end
 

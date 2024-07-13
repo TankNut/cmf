@@ -10,14 +10,17 @@ function PANEL:Setup(vars)
 
 	combo:DockMargin(0, 1, 2, 2)
 	combo:Dock(FILL)
-	combo:AddChoice("*none*", "")
 
 	local context = vars.context
 
-	if context.IsBone and context.DefaultBones[context.Name] then
+	if context.IsBone then
+		combo:AddChoice("*none*", "")
+	end
+
+	if context.IsBone and cmf.DefaultBones[context.Name] then
 		combo:SetTooltip("Built-in bones cannot have a parent set.")
 	else
-		local boneList = cmf.Editor.Blueprint.Bones
+		local boneList = cmf.Editor.Mech.Bones
 		local bones = {}
 
 		for name, bone in pairs(boneList) do
@@ -28,7 +31,7 @@ function PANEL:Setup(vars)
 			bones[name] = true
 		end
 
-		for name in pairs(context.DefaultBones) do
+		for name in pairs(cmf.DefaultBones) do
 			if boneList[name] then
 				continue
 			end

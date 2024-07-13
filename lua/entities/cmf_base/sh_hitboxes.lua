@@ -1,9 +1,10 @@
 AddCSLuaFile()
 
 function ENT:UpdateHitboxes()
+	local bones = self.Mech.Bones
 	for bone, group in pairs(self.HitboxBones) do
-		local bonePos = self.Bones[bone].Pos
-		local boneAng = self.Bones[bone].Ang
+		local bonePos = bones[bone].Position
+		local boneAng = bones[bone].Angle
 
 		for _, hitbox in pairs(group) do
 			local pos, ang = LocalToWorld(hitbox:GetHitboxPos(), hitbox:GetHitboxAng(), bonePos, boneAng)

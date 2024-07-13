@@ -1,7 +1,7 @@
 AddCSLuaFile()
 
 function ENT:InitPhysics()
-	local mins, maxs = self.Blueprint.PhysboxMins, self.Blueprint.PhysboxMaxs
+	local mins, maxs = self.Mech.PhysboxMins, self.Mech.PhysboxMaxs
 
 	if IsValid(self.PhysCollide) then
 		self.PhysCollide:Destroy()
@@ -48,6 +48,6 @@ if CLIENT then
 	local color = Color(255, 191, 0)
 
 	function ENT:DrawPhysics()
-		render.DrawWireframeBox(self:GetPos(), self:GetAngles(), self.Blueprint.PhysboxMins, self.Blueprint.PhysboxMaxs, color, true)
+		render.DrawWireframeBox(self:GetPos(), self:GetAngles(), self.Mech.PhysboxMins, self.Mech.PhysboxMaxs, color, true)
 	end
 end

@@ -11,17 +11,9 @@ ENT.Category = "Custom Mech Framework"
 ENT.Spawnable = true
 ENT.DisableDuplicator = true
 
-ENT.BODY = 0
-ENT.LEG_LEFT = 1
-ENT.LEG_RIGHT = 2
-
-include("cl_parts.lua")
-include("sh_blueprint.lua")
-include("sh_bones.lua")
-include("sh_gait.lua")
+include("sh_mech.lua")
 include("sh_helpers.lua")
 include("sh_hitboxes.lua")
-include("sh_legs.lua")
 include("sh_movement.lua")
 include("sh_physics.lua")
 
@@ -34,12 +26,10 @@ function ENT:Initialize()
 	self.HitboxBones = {}
 
 	if CLIENT then
-		self.Parts = {}
-
-		if self.Blueprint then
-			self:LoadBlueprint()
+		if self.Mech then
+			self:LoadMech()
 		else
-			self:RequestBlueprint()
+			self:RequestMech()
 		end
 
 		return
@@ -47,16 +37,17 @@ function ENT:Initialize()
 		self:SetUseType(SIMPLE_USE)
 	end
 
-	if not self.Blueprint then
+	if not self.Mech then
 		-- Error out, currently loads a pre-defined blueprint for testing
-		self.Blueprint = cmf:LoadBlueprint("cmf/test.json")
+		self.Mech = cmf:Instance("Mech")
+		self.Mech:LoadFromFile("cmf/test.json")
 	end
 
 	self:CreateSeat()
-	self:LoadBlueprint()
+	self:LoadMech()
 
 	-- Encode and compress once so people can easily request it later
-	self.BlueprintCache = util.Compress(cmf:Encode(self.Blueprint))
+	self.DataCache = util.Compress(cmf:Encode(self.Mech:Serialize()))
 end
 
 function ENT:SetupDataTables()
@@ -71,17 +62,23 @@ function ENT:Think()
 	self:NextThink(CurTime())
 	self:PhysWake()
 
-	if not self.Loaded then
+	local mech = self.Mech
+
+	if not mech then
 		return true
 	end
 
-	self:UpdateBones()
-	self:RunGait()
-	self:UpdateHitboxes()
+	mech.Position = self:GetPos()
+	mech.Angle = self:GetAngles()
+	mech.Velocity = self:GetMoveVelocity()
 
-	if CLIENT then
-		self:UpdateParts()
-	end
+	mech.WalkCycle = self:GetWalkCycle()
+
+	mech:Think()
+
+	self:SetWalkCycle(mech.WalkCycle)
+
+	self:UpdateHitboxes()
 
 	return true
 end
@@ -91,8 +88,8 @@ function ENT:OnRemove()
 		self.PhysCollide:Destroy()
 	end
 
-	if CLIENT then
-		self:ClearParts()
+	if self.Mech then
+		self.Mech:Remove()
 	end
 end
 
@@ -100,14 +97,14 @@ if CLIENT then
 	local convar = GetConVar("developer")
 
 	function ENT:Draw()
-		if not self.Loaded then
+		if not self.Mech then
 			return
 		end
 
 		if convar:GetBool() then
 			self:DrawPhysics()
 			self:DrawHitboxes()
-			self:DrawBones()
+			--self.Mech:DrawBones()
 		end
 	end
 
@@ -177,7 +174,7 @@ else
 	end
 
 	function ENT:Use(ply)
-		if not self.Loaded then
+		if not self.Mech then
 			return
 		end
 

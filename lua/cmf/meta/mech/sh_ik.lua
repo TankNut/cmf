@@ -1,5 +1,6 @@
 AddCSLuaFile()
 
+local meta = cmf:Class("Mech")
 local rad2Deg = 180 / math.pi
 
 local function acos(rad)
@@ -7,7 +8,7 @@ local function acos(rad)
 end
 
 local function toLocalAxis(ent, axis)
-	return ent:WorldToLocal(axis + ent:GetPos())
+	return ent:WorldToLocal(axis + ent.Position)
 end
 
 local function bearing(originPos, originAngle, pos)
@@ -22,49 +23,29 @@ local function localToWorldAngles(localAng, origin)
 	return ang
 end
 
-function ENT:InitLegs()
-	self.LastGaitUpdate = CurTime()
-	self.Legs = {
-		[self.LEG_LEFT] = {
-			CycleOffset = 0,
-			Offset = 1,
-			Hip = self.Bones.lhip,
-			Knee = self.Bones.lknee,
-			Foot = self.Bones.lfoot
-		},
-		[self.LEG_RIGHT] = {
-			CycleOffset = 0.5,
-			Offset = -1,
-			Hip = self.Bones.rhip,
-			Knee = self.Bones.rknee,
-			Foot = self.Bones.rfoot
-		}
-	}
-end
-
-function ENT:PerformLegIK(index, leg)
-	local blueprint = self.Blueprint
+function meta:PerformLegIK(index, leg)
 	local target = leg.Pos
 	local targetNormal = leg.Normal
 
-	local length1 = blueprint.UpperLegLength
-	local length2 = blueprint.LowerLegLength
+	local length1 = self.UpperLegLength
+	local length2 = self.LowerLegLength
 
 	if leg.Moving then
-		length2 = length2 + blueprint.FootOffset
+		length2 = length2 + self.FootOffset
 	else
-		target = target + targetNormal * blueprint.FootOffset
+		target = target + targetNormal * self.FootOffset
 	end
 
 	local rootBone = self.Bones.root
+	local ang = self.Angle
 
-	local hipPos = LocalToWorld(Vector(0, blueprint.LegSpacing * leg.Offset, 0), angle_zero, rootBone.Pos, rootBone.Ang)
+	local hipPos = LocalToWorld(Vector(0, self.LegSpacing * leg.Offset, 0), angle_zero, rootBone.Position, rootBone.Angle)
 	local axis = toLocalAxis(self, target - hipPos)
 	local dist = math.min(axis:Length(), length1 + length2)
 
 	local axisAngle = axis:Angle()
 
-	axisAngle.r = -bearing(hipPos, self:GetAngles(), target)
+	axisAngle.r = -bearing(hipPos, ang, target)
 	axisAngle:RotateAroundAxis(axisAngle:Right(), 180 - acos(
 		(dist^2 + length1^2 - length2^2) / (2 * length1 * dist)))
 
@@ -85,10 +66,10 @@ function ENT:PerformLegIK(index, leg)
 		footAng = targetNormal:Angle()
 
 		footAng:RotateAroundAxis(footAng:Right(), -90)
-		footAng:RotateAroundAxis(targetNormal, -footAng.y + self:GetAngles().y)
+		footAng:RotateAroundAxis(targetNormal, -footAng.y + ang.y)
 	end
 
-	local footPos = kneePos + kneeAng:Forward() * blueprint.LowerLegLength - footAng:Up() * blueprint.FootOffset
+	local footPos = kneePos + kneeAng:Forward() * self.LowerLegLength - footAng:Up() * self.FootOffset
 
 	local offset = Vector(0, 1, 0)
 
@@ -96,14 +77,19 @@ function ENT:PerformLegIK(index, leg)
 		offset.y = -offset.y
 	end
 
-	offset:Rotate(self:GetAngles())
+	offset:Rotate(ang)
 
-	leg.Hip.Pos = hipPos
-	leg.Hip.Ang = hipAng
+	local frame = FrameNumber()
 
-	leg.Knee.Pos = kneePos
-	leg.Knee.Ang = kneeAng
+	leg.Hip.Position = hipPos
+	leg.Hip.Angle = hipAng
+	leg.Hip.LastUpdate = frame
 
-	leg.Foot.Pos = footPos
-	leg.Foot.Ang = footAng
+	leg.Knee.Position = kneePos
+	leg.Knee.Angle = kneeAng
+	leg.Knee.LastUpdate = frame
+
+	leg.Foot.Position = footPos
+	leg.Foot.Angle = footAng
+	leg.Foot.LastUpdate = frame
 end

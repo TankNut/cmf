@@ -32,7 +32,7 @@ function ENT:GetGroundTrace()
 end
 
 function ENT:GetRootBoneOffset()
-	local run = self.Blueprint.RunSpeed
+	local run = self.Mech.RunSpeed
 
 	local vel = self:GetVelocity()
 	local fraction = self:GetMoveFraction()

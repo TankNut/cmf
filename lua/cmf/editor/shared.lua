@@ -1,11 +1,12 @@
 AddCSLuaFile()
 
-include("sh_edit.lua")
-
 cmf:IncludeClient("properties/prop_angle.lua")
 cmf:IncludeClient("properties/prop_bones.lua")
 cmf:IncludeClient("properties/prop_int.lua")
 cmf:IncludeClient("properties/prop_vector.lua")
+
+cmf:IncludeClient("sh_edit.lua")
+cmf:IncludeClient("sh_hooks.lua")
 
 if SERVER then
 	return
@@ -14,21 +15,27 @@ end
 function cmf:OpenEditor(pos, force)
 	if not cmf.Editor then
 		cmf.Editor = {
-			Blueprint = cmf:Blueprint()
+			Mech = cmf:Instance("Mech")
 		}
 	end
 
 	cmf.Editor.Origin = pos
 
 	if force then
-		cmf.Editor.Blueprint = cmf:Blueprint()
+		if cmf.Editor.Mech then
+			cmf.Editor.Mech:Remove()
+		end
+
+		cmf.Editor.Mech = cmf:Instance("Mech")
 	end
 
 	local panel = vgui.Create("cmf_editor")
-	panel.Blueprint = cmf.Editor.Blueprint
+	panel.Mech = cmf.Editor.Mech
 	panel:PopulateTree()
 
 	cmf.Editor.Panel = panel
+
+	self:AddEditorHooks()
 end
 
 local PANEL = {}
@@ -57,7 +64,7 @@ end
 
 function PANEL:AddGeneralNode(title, icon, fields)
 	self.General:AddNode(title, icon).Label.DoDoubleClick = function()
-		self:OpenNode(title, self.Blueprint, fields)
+		self:OpenNode(title, self.Mech, fields)
 		return true
 	end
 end
@@ -79,33 +86,28 @@ local boneFields = {
 	Angle = {order = 2, title = "Angle", type = "CMF_Angle"}
 }
 
-local defaultBones = {
-	["root"] = true,
-	["lhip"] = true,
-	["lknee"] = true,
-	["lfoot"] = true,
-	["rhip"] = true,
-	["rknee"] = true,
-	["rfoot"] = true
-}
-
 function PANEL:PopulateBones(expand)
 	self.Bones:Clear()
 
-	for name, bone in SortedPairs(self.Blueprint.Bones) do
+	for name, bone in SortedPairs(self.Mech.Bones) do
 		local node = self:AddSubNode(self.Bones, name, "Bone: " .. name, "icon16/connect.png", bone, boneFields, {
 			IsBone = true,
 			Name = name,
-			Bone = bone,
-			DefaultBones = defaultBones
+			Bone = bone
 		})
 
 		node.DoRightClick = function()
 			local context = DermaMenu()
-			context:AddOption("Delete Bone", function()
-				self.Blueprint:RemoveBone(name)
+
+			local deleteOption = context:AddOption("Delete Bone", function()
+				self.Mech:RemoveBone(name)
 				self:PopulateBones(true)
-			end):SetIcon("icon16/delete.png")
+			end)
+			deleteOption:SetIcon("icon16/delete.png")
+
+			if cmf.DefaultBones[name] then
+				deleteOption:SetDisabled(true)
+			end
 
 			context:Open()
 		end
@@ -119,8 +121,12 @@ end
 function PANEL:CreateBoneNode()
 	self.Bones = self.RootNode:AddNode("Bones", "icon16/folder.png")
 	self.Bones.DoRightClick = function()
-		local blueprint = self.Blueprint
+		local mech = self.Mech
 		local context = DermaMenu()
+
+		context:AddOption("Refresh", function()
+			self:PopulateBones()
+		end):SetIcon("icon16/arrow_refresh.png")
 
 		context:AddOption("Add Bone...", function()
 			Derma_StringRequest("Add Bone", "Choose a name for the newly added bone", "", function(name)
@@ -128,36 +134,17 @@ function PANEL:CreateBoneNode()
 					return
 				end
 
-				if blueprint.Bones[name] then
+				if mech.Bones[name] then
 					Derma_Message("Specified bone already exists", "Error", "Ok")
 
 					return
 				end
 
-				blueprint:AddBone(name)
+				mech:AddBone(name)
 
 				self:PopulateBones(true)
 			end)
 		end):SetIcon("icon16/add.png")
-
-		local sub, parent = context:AddSubMenu("Add Default Bone...")
-		parent:SetIcon("icon16/table.png")
-
-		for name in pairs(defaultBones) do
-			if blueprint.Bones[name] then
-				continue
-			end
-
-			sub:AddOption(name, function()
-				if blueprint.Bones[name] then
-					return
-				end
-
-				blueprint:AddBone(name)
-
-				self:PopulateBones(true)
-			end)
-		end
 
 		context:Open()
 
@@ -165,6 +152,62 @@ function PANEL:CreateBoneNode()
 	end
 
 	self:PopulateBones()
+end
+
+local hitboxFields = {
+	Bone = {order = 0, title = "Bone", type = "CMF_Bones"},
+	Offset = {order = 1, title = "Offset", type = "CMF_Vector"},
+	Angle = {order = 2, title = "Angle", type = "CMF_Angle"}
+}
+
+function PANEL:PopulateHitboxes(expand)
+	self.Hitboxes:Clear()
+
+	for index, hitbox in SortedPairs(self.Mech.Hitboxes) do
+		local node = self:AddSubNode(self.Hitboxes, hitbox.Bone, "Hitbox: " .. hitbox.Bone, "icon16/connect.png", hitbox, hitboxFields, {
+			IsHitbox = true,
+			Index = index,
+			Hitbox = hitbox
+		})
+
+		node.DoRightClick = function()
+			local context = DermaMenu()
+
+			context:AddOption("Delete Hitbox", function()
+				self.Mech:RemoveHitbox(index)
+				self:PopulateHitboxes(true)
+			end):SetIcon("icon16/delete.png")
+
+			context:Open()
+		end
+	end
+
+	if expand then
+		self.Hitboxes:SetExpanded(true)
+	end
+end
+
+function PANEL:CreateHitboxNode()
+	self.Hitboxes = self.RootNode:AddNode("Hitboxes", "icon16/folder.png")
+	self.Hitboxes.DoRightClick = function()
+		local mech = self.Mech
+		local context = DermaMenu()
+
+		context:AddOption("Refresh", function()
+			self:PopulateHitboxes()
+		end):SetIcon("icon16/arrow_refresh.png")
+
+		context:AddOption("Add Hitbox...", function()
+			mech:AddHitbox()
+			self:PopulateHitboxes(true)
+		end):SetIcon("icon16/add.png")
+
+		context:Open()
+
+		return true
+	end
+
+	self:PopulateHitboxes()
 end
 
 local informationFields = {
@@ -207,17 +250,7 @@ function PANEL:PopulateTree()
 	self:AddGeneralNode("Physics", "icon16/shape_handles.png", physicsFields)
 
 	self:CreateBoneNode()
-
-	local hitboxes = self.RootNode:AddNode("Hitboxes", "icon16/folder.png")
-
-	hitboxes.DoRightClick = function()
-		local context = DermaMenu()
-
-		context:AddOption("Add Hitbox...")
-		context:Open()
-
-		return true
-	end
+	self:CreateHitboxNode()
 
 	local parts = self.RootNode:AddNode("Parts", "icon16/folder.png")
 

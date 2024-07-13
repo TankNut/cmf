@@ -1,8 +1,6 @@
 AddCSLuaFile()
 
-cmf = cmf or {
-	Meta = {}
-}
+cmf = cmf or {}
 
 function cmf:IncludeClient(path)
 	AddCSLuaFile(path)
@@ -12,12 +10,10 @@ function cmf:IncludeClient(path)
 	end
 end
 
-include("editor/shared.lua")
+include("sh_meta.lua")
 
-include("meta/sh_blueprint.lua")
-include("meta/sh_bone.lua")
-include("meta/sh_hitbox.lua")
-include("meta/sh_part.lua")
+include("editor/shared.lua")
+include("meta/mech/shared.lua")
 
 include("sh_callbacks.lua")
 include("sh_hook.lua")
