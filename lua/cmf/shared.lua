@@ -17,6 +17,7 @@ include("meta/mech/shared.lua")
 
 include("sh_callbacks.lua")
 include("sh_hook.lua")
+include("sh_modifiers.lua")
 include("sh_pack.lua")
 
 if CLIENT then

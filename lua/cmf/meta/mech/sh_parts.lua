@@ -33,8 +33,6 @@ if CLIENT then
 	function meta:CreatePartEntity(index, part)
 		local ent = ClientsideModel(part.Model, part.RenderGroup)
 
-		ent:SetSkin(part.Skin)
-
 		self.ClientsideEntities[index] = ent
 
 		return ent
@@ -50,8 +48,16 @@ if CLIENT then
 		for index, part in pairs(self.Parts) do
 			local ent = self.ClientsideEntities[index]
 
-			if not IsValid(ent) then
+			if not IsValid(ent) or ent:GetModel() != string.lower(part.Model) then
+				SafeRemoveEntity(ent)
+
 				ent = self:CreatePartEntity(index, part)
+			end
+
+			local targetSkin = tonumber(part.Skin) or 0
+
+			if ent:GetSkin() != targetSkin then
+				ent:SetSkin(targetSkin)
 			end
 
 			ent:SetNoDraw(dormant)

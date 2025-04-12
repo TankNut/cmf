@@ -13,9 +13,7 @@ function PANEL:Setup(vars)
 
 	local context = vars.context
 
-	if context.IsBone then
-		combo:AddChoice("*none*", "")
-	end
+	combo:AddChoice("*none*", "")
 
 	if context.IsBone and cmf.DefaultBones[context.Name] then
 		combo:SetTooltip("Built-in bones cannot have a parent set.")

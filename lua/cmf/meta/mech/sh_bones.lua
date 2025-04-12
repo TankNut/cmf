@@ -14,6 +14,7 @@ local meta = cmf:Class("Mech")
 
 function meta:AddBone(name)
 	local bone = self.Bones[name]
+
 	if not bone then
 		bone = {
 			Name = name,
@@ -29,6 +30,7 @@ function meta:AddBone(name)
 		}
 
 		self.Bones[name] = bone
+		self.Modifiers[name] = {}
 	end
 
 	return bone
@@ -38,6 +40,7 @@ function meta:RemoveBone(name)
 	assert(not cmf.DefaultBones[name])
 
 	self.Bones[name] = nil
+	self.Modifiers[name] = nil
 
 	for _, bone in pairs(self.Bones) do
 		if bone.Parent == name then
@@ -82,6 +85,11 @@ function meta:UpdateBone(bone)
 	end
 
 	bone.Position, bone.Angle = LocalToWorld(bone.OffsetPos, bone.OffsetAng, pos, ang)
+
+	for _, modifier in pairs(self.Modifiers[bone.Name]) do
+		self:ApplyModifier(bone, modifier)
+	end
+
 	bone.LastUpdate = FrameNumber()
 end
 

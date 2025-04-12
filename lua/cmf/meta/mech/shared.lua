@@ -6,6 +6,7 @@ include("sh_bones.lua")
 include("sh_gait.lua")
 include("sh_hitboxes.lua")
 include("sh_ik.lua")
+include("sh_modifiers.lua")
 include("sh_parts.lua")
 include("sh_serialization.lua")
 
@@ -13,6 +14,7 @@ function meta:Initialize()
 	self.Bones = {}
 	self.Hitboxes = {}
 	self.Parts = {}
+	self.Modifiers = {}
 
 	if CLIENT then
 		self.ClientsideEntities = {}

@@ -65,6 +65,7 @@ end
 function PANEL:AddGeneralNode(title, icon, fields)
 	self.General:AddNode(title, icon).Label.DoDoubleClick = function()
 		self:OpenNode(title, self.Mech, fields)
+
 		return true
 	end
 end
@@ -74,16 +75,45 @@ function PANEL:AddSubNode(parent, name, title, icon, object, fields, context)
 
 	node.Label.DoDoubleClick = function()
 		self:OpenNode(title, object, fields, context)
+
 		return true
 	end
 
 	return node
 end
 
+function PANEL:PopulateModifiers(bone, context)
+	local nodes = {_panel = context}
+
+	for name, callback in pairs(cmf.Modifiers) do
+		local node = nodes
+		local expl = string.Explode("/", name)
+
+		for i, part in pairs(expl) do
+			if i == #expl then
+				node._panel:AddOption(part, function()
+					self.Mech:AddModifier(name, bone)
+					self:PopulateBones(true)
+				end)
+
+				break
+			end
+
+			if not node[part] then
+				node[part] = {
+					_panel = node._panel:AddSubMenu(part)
+				}
+			end
+
+			node = node[part]
+		end
+	end
+end
+
 local boneFields = {
 	Parent = {order = 0, title = "Parent", type = "CMF_Bones"},
-	Offset = {order = 1, title = "Offset", type = "CMF_Vector"},
-	Angle = {order = 2, title = "Angle", type = "CMF_Angle"}
+	OffsetPos = {order = 1, title = "Offset", type = "CMF_Vector"},
+	OffsetAng = {order = 2, title = "Angle", type = "CMF_Angle"}
 }
 
 function PANEL:PopulateBones(expand)
@@ -98,11 +128,17 @@ function PANEL:PopulateBones(expand)
 
 		node.DoRightClick = function()
 			local context = DermaMenu()
+			local modifierMenu, modifierOption = context:AddSubMenu("Add Modifier")
+
+			self:PopulateModifiers(name, modifierMenu)
+
+			modifierOption:SetIcon("icon16/plugin_add.png")
 
 			local deleteOption = context:AddOption("Delete Bone", function()
 				self.Mech:RemoveBone(name)
 				self:PopulateBones(true)
 			end)
+
 			deleteOption:SetIcon("icon16/delete.png")
 
 			if cmf.DefaultBones[name] then
@@ -110,6 +146,10 @@ function PANEL:PopulateBones(expand)
 			end
 
 			context:Open()
+		end
+
+		for _, v in pairs(self.Mech.Modifiers[name]) do
+			node:AddNode(v, "icon16/plugin.png")
 		end
 	end
 
@@ -164,8 +204,8 @@ function PANEL:PopulateHitboxes(expand)
 	self.Hitboxes:Clear()
 
 	for index, hitbox in SortedPairs(self.Mech.Hitboxes) do
-		local node = self:AddSubNode(self.Hitboxes, hitbox.Bone, "Hitbox: " .. hitbox.Bone, "icon16/connect.png", hitbox, hitboxFields, {
-			IsHitbox = true,
+		local name = string.format("[%s]: %s", index, hitbox.Bone)
+		local node = self:AddSubNode(self.Hitboxes, name, "Hitbox " .. name, "icon16/connect.png", hitbox, hitboxFields, {
 			Index = index,
 			Hitbox = hitbox
 		})
@@ -210,6 +250,64 @@ function PANEL:CreateHitboxNode()
 	self:PopulateHitboxes()
 end
 
+local partFields = {
+	Bone = {order = 0, title = "Bone", type = "CMF_Bones"},
+	Model = {order = 1, title = "Model", type = "Generic"},
+	Skin = {order = 2, title = "Skin", type = "Generic"},
+	Offset = {order = 3, title = "Offset", type = "CMF_Vector"},
+	Angle = {order = 4, title = "Angle", type = "CMF_Angle"}
+}
+
+function PANEL:PopulateParts(expand)
+	self.Parts:Clear()
+
+	for index, part in SortedPairs(self.Mech.Parts) do
+		local name = string.format("[%s]: %s", index, part.Model)
+		local node = self:AddSubNode(self.Parts, name, "Part " .. name, "icon16/connect.png", part, partFields, {
+			Index = index,
+			Part = part
+		})
+
+		node.DoRightClick = function()
+			local context = DermaMenu()
+
+			context:AddOption("Delete Part", function()
+				self.Mech:RemovePart(index)
+				self:PopulateParts(true)
+			end):SetIcon("icon16/delete.png")
+
+			context:Open()
+		end
+	end
+
+	if expand then
+		self.Parts:SetExpanded(true)
+	end
+end
+
+function PANEL:CreatePartNode()
+	self.Parts = self.RootNode:AddNode("Parts", "icon16/folder.png")
+	self.Parts.DoRightClick = function()
+		local mech = self.Mech
+		local context = DermaMenu()
+
+		context:AddOption("Refresh", function()
+			self:PopulateParts()
+		end):SetIcon("icon16/arrow_refresh.png")
+
+		context:AddOption("Add Part...", function()
+			mech:AddPart()
+			self:PopulateParts(true)
+		end):SetIcon("icon16/add.png")
+
+		context:Open()
+
+		return true
+	end
+
+	self:PopulateParts()
+end
+
 local informationFields = {
 	Name = {order = 0, title = "Name", type = "Generic"},
 	Version = {order = 1, title = "Version", type = "Generic"},
@@ -251,17 +349,7 @@ function PANEL:PopulateTree()
 
 	self:CreateBoneNode()
 	self:CreateHitboxNode()
-
-	local parts = self.RootNode:AddNode("Parts", "icon16/folder.png")
-
-	parts.DoRightClick = function()
-		local context = DermaMenu()
-
-		context:AddOption("Add Part...")
-		context:Open()
-
-		return true
-	end
+	self:CreatePartNode()
 
 	self.RootNode:SetExpanded(true)
 end
