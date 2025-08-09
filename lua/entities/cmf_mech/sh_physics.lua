@@ -1,11 +1,14 @@
 AddCSLuaFile()
 
-function ENT:InitPhysics()
-	local mins, maxs = self.Mech.PhysboxMins, self.Mech.PhysboxMaxs
+AddCSLuaFile()
 
+function ENT:InitPhysics()
 	if IsValid(self.PhysCollide) then
 		self.PhysCollide:Destroy()
 	end
+
+	local mins = self.Hull.Mins
+	local maxs = self.Hull.Maxs
 
 	self:EnableCustomCollisions(true)
 	self:SetCollisionBounds(mins, maxs)
@@ -42,12 +45,4 @@ function ENT:TestCollision(start, delta, isbox, extends, mask)
 		Normal = norm,
 		Fraction = frac
 	}
-end
-
-if CLIENT then
-	local color = Color(255, 191, 0)
-
-	function ENT:DrawPhysics()
-		render.DrawWireframeBox(self:GetPos(), self:GetAngles(), self.Mech.PhysboxMins, self.Mech.PhysboxMaxs, color, true)
-	end
 end

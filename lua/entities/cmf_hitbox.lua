@@ -8,24 +8,13 @@ ENT.Author = "TankNut"
 ENT.DisableDuplicator = true
 ENT.PhysgunDisabled = true
 
-ENT.BODY = 0
-ENT.LEG_LEFT = 1
-ENT.LEG_RIGHT = 2
-
 function ENT:Initialize()
 	self:SetModel("models/props_lab/cactus.mdl")
 
 	local mech = self:GetOwner()
 
 	table.insert(mech.Hitboxes, self)
-
-	local index = self:GetHitboxIndex()
-
-	if not mech.HitboxBones[index] then
-		mech.HitboxBones[index] = {}
-	end
-
-	table.insert(mech.HitboxBones[index], self)
+	table.insert(mech.HitboxBones[self:GetHitboxIndex()], self)
 
 	local mins, maxs = self:GetHitboxMins(), self:GetHitboxMaxs()
 

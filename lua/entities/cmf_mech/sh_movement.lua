@@ -1,5 +1,14 @@
 AddCSLuaFile()
 
+function ENT:InitMovement()
+	if SERVER then
+		self.MoveData = {
+			LastUpdate = CurTime(),
+			Velocity = Vector()
+		}
+	end
+end
+
 function ENT:GetMoveVelocity()
 	if CLIENT then
 		return self:GetMechVelocity()
@@ -9,15 +18,19 @@ function ENT:GetMoveVelocity()
 end
 
 function ENT:GetGroundOffset()
-	return self.Mech.StandHeight
+	return self.GroundOffset
+end
+
+function ENT:GetMoveAcceleration()
+	return self.MoveAcceleration
 end
 
 function ENT:GetDesiredMoveSpeed(ply)
-	return ply:KeyDown(IN_SPEED) and self.Mech.RunSpeed or self.Mech.WalkSpeed
+	return ply:KeyDown(IN_SPEED) and self.RunSpeed or self.WalkSpeed
 end
 
 function ENT:GetMoveFraction()
-	return math.min(self:GetMoveVelocity():Length2D() / 150, 1)
+	return math.min(self:GetMoveVelocity():Length2D() / self.MoveFraction, 1)
 end
 
 if SERVER then
@@ -38,7 +51,7 @@ if SERVER then
 			return
 		end
 
-		if data.Slope > 35 then
+		if data.Slope > self.MaxSlope then
 			local gravity = physenv.GetGravity().z * data.Delta
 			local dir = Vector(tr.HitNormal)
 
@@ -83,7 +96,7 @@ if SERVER then
 		local data = self.MoveData
 		local vel = data.Velocity
 
-		local accel = self.Mech.Acceleration * data.Delta
+		local accel = self:GetMoveAcceleration() * data.Delta
 		local target = self:GetDesiredVelocity()
 		local dot = self:GetForward():Dot(data.GroundTrace.HitNormal)
 
@@ -95,6 +108,10 @@ if SERVER then
 		vel.y = math.Approach(vel.y, target.y, accel * ratio.y)
 	end
 
+	function ENT:GetTurnRate()
+		return self.TurnRate
+	end
+
 	function ENT:GetDesiredAngle()
 		local data = self.MoveData
 
@@ -103,14 +120,10 @@ if SERVER then
 
 		local direction = right - left
 
-		return data.Yaw - (direction * self.Mech.TurnRate * data.Delta)
+		return data.Yaw - (direction * self:GetTurnRate() * data.Delta)
 	end
 
 	function ENT:PhysicsUpdate(phys)
-		if not self.Mech then
-			return
-		end
-
 		local data = self.MoveData
 
 		data.Phys = phys
@@ -121,6 +134,10 @@ if SERVER then
 		data.LastUpdate = CurTime()
 
 		if phys:HasGameFlag(FVPHYSICS_PLAYER_HELD) then
+			data.Velocity = vector_origin
+
+			self:SetMechVelocity(vector_origin)
+
 			return
 		end
 

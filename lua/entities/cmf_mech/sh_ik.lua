@@ -1,6 +1,5 @@
 AddCSLuaFile()
 
-local meta = cmf:Class("Mech")
 local rad2Deg = 180 / math.pi
 
 local function acos(rad)
@@ -8,7 +7,7 @@ local function acos(rad)
 end
 
 local function toLocalAxis(ent, axis)
-	return ent:WorldToLocal(axis + ent.Position)
+	return ent:WorldToLocal(axis + ent:GetPos())
 end
 
 local function bearing(originPos, originAngle, pos)
@@ -23,12 +22,11 @@ local function localToWorldAngles(localAng, origin)
 	return ang
 end
 
-function meta:PerformLegIK(index, leg)
+function ENT:PerformLegIK(index, leg)
 	local target = leg.Pos
 	local targetNormal = leg.Normal
 
-	local length1 = self.UpperLegLength
-	local length2 = self.LowerLegLength
+	local length1, length2 = self.UpperLength, self.LowerLength
 
 	if leg.Moving then
 		length2 = length2 + self.FootOffset
@@ -36,16 +34,15 @@ function meta:PerformLegIK(index, leg)
 		target = target + targetNormal * self.FootOffset
 	end
 
-	local rootBone = self.Bones.root
-	local ang = self.Angle
+	local rootBone = self.Bones["Root"]
 
-	local hipPos = LocalToWorld(Vector(0, self.LegSpacing * leg.Offset, 0), angle_zero, rootBone.Position, rootBone.Angle)
+	local hipPos = LocalToWorld(Vector(0, self.LegSpacing * leg.Offset, 0), angle_zero, rootBone.Pos, rootBone.Ang)
 	local axis = toLocalAxis(self, target - hipPos)
 	local dist = math.min(axis:Length(), length1 + length2)
 
 	local axisAngle = axis:Angle()
 
-	axisAngle.r = -bearing(hipPos, ang, target)
+	axisAngle.r = -bearing(hipPos, self:GetAngles(), target)
 	axisAngle:RotateAroundAxis(axisAngle:Right(), 180 - acos(
 		(dist^2 + length1^2 - length2^2) / (2 * length1 * dist)))
 
@@ -66,10 +63,10 @@ function meta:PerformLegIK(index, leg)
 		footAng = targetNormal:Angle()
 
 		footAng:RotateAroundAxis(footAng:Right(), -90)
-		footAng:RotateAroundAxis(targetNormal, -footAng.y + ang.y)
+		footAng:RotateAroundAxis(targetNormal, -footAng.y + self:GetAngles().y)
 	end
 
-	local footPos = kneePos + kneeAng:Forward() * self.LowerLegLength - footAng:Up() * self.FootOffset
+	local footPos = kneePos + kneeAng:Forward() * self.LowerLength - footAng:Up() * self.FootOffset
 
 	local offset = Vector(0, 1, 0)
 
@@ -77,19 +74,14 @@ function meta:PerformLegIK(index, leg)
 		offset.y = -offset.y
 	end
 
-	offset:Rotate(ang)
+	offset:Rotate(self:GetAngles())
 
-	local frame = FrameNumber()
+	leg.Hip.Pos = hipPos
+	leg.Hip.Ang = hipAng
 
-	leg.Hip.Position = hipPos
-	leg.Hip.Angle = hipAng
-	leg.Hip.LastUpdate = frame
+	leg.Knee.Pos = kneePos
+	leg.Knee.Ang = kneeAng
 
-	leg.Knee.Position = kneePos
-	leg.Knee.Angle = kneeAng
-	leg.Knee.LastUpdate = frame
-
-	leg.Foot.Position = footPos
-	leg.Foot.Angle = footAng
-	leg.Foot.LastUpdate = frame
+	leg.Foot.Pos = footPos
+	leg.Foot.Ang = footAng
 end
