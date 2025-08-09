@@ -190,22 +190,17 @@ if CLIENT then
 			return
 		end
 
-		angles = ply:EyeAngles()
+		angles = ply:EyeAngles() + Angle(5, 0, 0)
 
 		local seat = self:GetSeat()
 		local thirdperson = seat:GetThirdPersonMode()
 
 		if thirdperson then
-			origin = self:LocalToWorld(Vector(0, 0, 30))
-
-			local mins, maxs = seat:GetRenderBounds()
-			local radius = (mins - maxs):Length()
-
-			radius = radius + radius * seat:GetCameraDistance()
+			origin = self:LocalToWorld(Vector(0, 0, 100))
 
 			local tr = util.TraceHull({
 				start = origin,
-				endpos = origin + (angles:Forward() * -radius),
+				endpos = origin + (angles:Forward() * -250),
 				mask = MASK_OPAQUE,
 				mins = Vector(-4, -4, -4),
 				maxs = Vector(4, 4, 4),
