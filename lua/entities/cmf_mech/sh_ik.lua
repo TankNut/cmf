@@ -68,14 +68,6 @@ function ENT:PerformLegIK(index, leg)
 
 	local footPos = kneePos + kneeAng:Forward() * self.LowerLength - footAng:Up() * self.FootOffset
 
-	local offset = Vector(0, 1, 0)
-
-	if index == 1 then
-		offset.y = -offset.y
-	end
-
-	offset:Rotate(self:GetAngles())
-
 	leg.Hip.Pos = hipPos
 	leg.Hip.Ang = hipAng
 
