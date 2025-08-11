@@ -190,23 +190,28 @@ if CLIENT then
 			return
 		end
 
+		self:UpdateBones()
+
 		angles = ply:EyeAngles() + Angle(5, 0, 0)
 
 		local seat = self:GetSeat()
 		local thirdperson = seat:GetThirdPersonMode()
 
 		if thirdperson then
-			origin = self:LocalToWorld(Vector(0, 0, 100))
+			origin = self:LocalToWorld(Vector(0, 0, 50))
 
 			local tr = util.TraceHull({
 				start = origin,
 				endpos = origin + (angles:Forward() * -250),
-				mask = MASK_OPAQUE,
+				mask = MASK_SOLID,
+				filter = self,
 				mins = Vector(-4, -4, -4),
 				maxs = Vector(4, 4, 4),
 			})
 
 			origin = tr.HitPos
+		else
+			origin = self:RelativeToBone("Torso", Vector(50, 0, 20))
 		end
 
 		return {
