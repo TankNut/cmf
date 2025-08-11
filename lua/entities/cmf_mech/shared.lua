@@ -1,5 +1,7 @@
 AddCSLuaFile()
 
+ENT.AutomaticFrameAdvance = true
+
 ENT.RenderGroup = RENDERGROUP_BOTH
 
 ENT.Type = "anim"
@@ -83,10 +85,6 @@ function ENT:Think()
 	self:UpdateBones()
 	self:UpdateLegs()
 	self:UpdateHitboxes()
-
-	if CLIENT then
-		self:UpdateParts()
-	end
 
 	self:NextThink(CurTime())
 
@@ -224,7 +222,12 @@ if CLIENT then
 		}
 	end
 
-	function ENT:Draw()
+	function ENT:Draw(flags)
+		self:DrawParts(flags, RENDERGROUP_OPAQUE)
+	end
+
+	function ENT:DrawTranslucent(flags)
+		self:DrawParts(flags, RENDERGROUP_TRANSLUCENT)
 	end
 
 	function ENT:PreDrawHUD()
