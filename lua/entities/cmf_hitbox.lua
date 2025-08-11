@@ -50,6 +50,9 @@ function ENT:SetupDataTables()
 	self:NetworkVar("Angle", "HitboxAng")
 end
 
+-- CONTENTS_GRATE runs for physguns but not for bullets
+-- CONTENTS_HITBOX runs for bullets but not for physguns
+
 function ENT:TestCollision(start, delta, isbox, extends, mask)
 	if bit.band(mask, CONTENTS_HITBOX) == 0 or not IsValid(self.PhysCollide) then
 		return
@@ -91,6 +94,7 @@ if CLIENT then
 		effectData:SetEntity(self)
 		effectData:SetOrigin(tr.HitPos)
 		effectData:SetStart(tr.StartPos)
+		effectData:SetNormal(tr.HitNormal)
 		effectData:SetSurfaceProp(util.GetSurfaceIndex("solidmetal"))
 		effectData:SetDamageType(damageType)
 

@@ -82,8 +82,8 @@ end
 function ENT:Think()
 	self:PhysWake()
 
-	self:UpdateBones()
 	self:UpdateLegs()
+	self:UpdateBones()
 	self:UpdateHitboxes()
 
 	self:NextThink(CurTime())

@@ -36,7 +36,7 @@ function ENT:DrawHitboxes()
 end
 
 function ENT:DrawLegs()
-	for k, leg in pairs(self.Legs) do
+	for k, leg in ipairs(self.Legs) do
 		render.DrawLine(leg.Hip.Pos, leg.Hip.Pos + leg.Hip.Ang:Forward() * self.UpperLength, forward)
 		render.DrawLine(leg.Hip.Pos, leg.Hip.Pos + leg.Hip.Ang:Right()   * length,           right)
 		render.DrawLine(leg.Hip.Pos, leg.Hip.Pos + leg.Hip.Ang:Up()      * length,           up)

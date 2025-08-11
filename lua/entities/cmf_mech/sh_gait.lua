@@ -51,7 +51,7 @@ function ENT:UpdateLegs()
 	local fraction = self:GetMoveFraction()
 	local walkCycle = self:GetWalkCycle() + delta * increase
 
-	for k, leg in pairs(self.Legs) do
+	for k, leg in ipairs(self.Legs) do
 		local sideOffset = self.LegSpacing * leg.Offset
 
 		leg.Cycle = (walkCycle + leg.CycleOffset) % 1
