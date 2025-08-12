@@ -28,14 +28,14 @@ ENT.Hull = {
 
 ENT.GroundOffset = 110
 
-ENT.MoveAcceleration = 400
+ENT.MoveAcceleration = 200
 
 ENT.WalkSpeed = 200
 ENT.RunSpeed = 530
 
 ENT.TurnRate = 90
 
-ENT.MaxSlope = 35
+ENT.MaxSlope = 40
 
 ENT.MoveFraction = 150
 

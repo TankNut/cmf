@@ -31,6 +31,7 @@ ENT.LowerLength = 85
 ENT.FootOffset = 10
 
 include("sh_bones.lua")
+include("sh_gait_new.lua")
 include("sh_gait.lua")
 include("sh_hitboxes.lua")
 include("sh_ik.lua")
@@ -58,6 +59,7 @@ function ENT:Initialize()
 	self:InitHitboxes()
 
 	self:InitLegs()
+	self:InitGait()
 
 	if CLIENT then
 		local radius = self.DrawRadius
@@ -82,8 +84,9 @@ end
 function ENT:Think()
 	self:PhysWake()
 
-	self:UpdateLegs()
 	self:UpdateBones()
+	self:UpdateLegs()
+	self:UpdateGait()
 	self:UpdateHitboxes()
 
 	self:NextThink(CurTime())

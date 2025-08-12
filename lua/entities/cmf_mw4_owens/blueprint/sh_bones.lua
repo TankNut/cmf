@@ -39,9 +39,12 @@ function ENT:UpdateBones()
 	local torsoBone = self.Bones["Torso"]
 	local weaponBone = self.Bones["Weapons"]
 
-	local rootPos, rootAng = self:GetRootBoneOffset()
+	-- Probably nice to get some sideways lean going
 
-	rootBone.Pos, rootBone.Ang = LocalToWorld(rootPos, rootAng, self:GetPos(), self:GetAngles())
+	--local rootPos, rootAng = self:GetRootBoneOffset()
+	--rootBone.Pos, rootBone.Ang = LocalToWorld(rootPos, rootAng, self:GetPos(), self:GetAngles())
+	rootBone.Ang = self:GetAngles()
+
 	torsoBone.Pos = self:RelativeToBone("Root", Vector(0, 0, 17))
 
 	local ply = self:GetDriver()

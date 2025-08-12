@@ -2,6 +2,7 @@ local drawPhysics = CreateClientConVar("cmf_debug_physics", 0)
 local drawBones = CreateClientConVar("cmf_debug_bones", 0)
 local drawHitboxes = CreateClientConVar("cmf_debug_hitboxes", 0)
 local drawLegs = CreateClientConVar("cmf_debug_legs", 0)
+local drawGait = CreateClientConVar("cmf_debug_gait", 0)
 
 local physicsColor = Color(255, 191, 0)
 local hitboxColor =  Color(0, 161, 255)
@@ -17,6 +18,7 @@ function ENT:DrawDebug()
 	if drawBones:GetBool()    then self:DrawBones() end
 	if drawHitboxes:GetBool() then self:DrawHitboxes() end
 	if drawLegs:GetBool()     then self:DrawLegs() end
+	if drawGait:GetBool()     then self:DrawGait() end
 end
 
 function ENT:DrawPhysics()
@@ -48,5 +50,49 @@ function ENT:DrawLegs()
 		render.DrawLine(leg.Foot.Pos, leg.Foot.Pos + leg.Foot.Ang:Forward() * length, forward)
 		render.DrawLine(leg.Foot.Pos, leg.Foot.Pos + leg.Foot.Ang:Right()   * length, right)
 		render.DrawLine(leg.Foot.Pos, leg.Foot.Pos + leg.Foot.Ang:Up()      * length, up)
+	end
+end
+
+function ENT:DrawGait()
+	for _, gait in ipairs(self.Gaits) do
+		for k, pos in ipairs({gait.LastStep, gait.RealStep, gait.NextStep}) do
+			local screen = pos:ToScreen()
+
+			local r = k == 1 and 255 or 0
+			local g = k == 2 and 255 or 0
+			local b = k == 3 and 255 or 0
+
+			if screen.visible then
+				cam.Start2D()
+					surface.DrawCircle(screen.x, screen.y, 10, r, g, b)
+				cam.End2D()
+			end
+		end
+	end
+
+	local screen = self.GlobalPos:ToScreen()
+
+	if screen.visible then
+		cam.Start2D()
+			surface.DrawCircle(screen.x, screen.y, 10, 255, 255, 255)
+		cam.End2D()
+	end
+
+	screen = self:GetPos():ToScreen()
+
+	if screen.visible then
+		cam.Start2D()
+			local x, y = screen.x, screen.y
+			local h = 0
+
+			local function drawText(str, ...)
+				local _, height = draw.SimpleText(string.format(str, ...), "BudgetLabel", x, y + h, color_white)
+
+				h = h + height
+			end
+
+			drawText("Root Bone Offset: %.2f", self.GlobalPos:Distance(self:GetPos()))
+			drawText("Fraction:         %.2f", self.GaitFraction)
+		cam.End2D()
 	end
 end
