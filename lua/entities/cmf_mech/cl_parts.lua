@@ -8,7 +8,7 @@ function ENT:InitParts()
 end
 
 function ENT:AddPart(data)
-	assert(self.Bones[data.Bone], string.format("Bone '%s' does not exist!", bone))
+	assert(self.Bones[data.Bone], string.format("Bone '%s' does not exist!", data.Bone))
 
 	table.insert(self.Parts, data)
 

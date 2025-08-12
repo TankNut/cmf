@@ -1,6 +1,12 @@
 AddCSLuaFile()
 
 function ENT:InitHitboxes()
+	if SERVER and self.Hitboxes then
+		for _, ent in pairs(self.Hitboxes) do
+			SafeRemoveEntity(ent)
+		end
+	end
+
 	self.Hitboxes = {}
 
 	if SERVER then

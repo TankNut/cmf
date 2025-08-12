@@ -43,7 +43,7 @@ function ENT:UpdateBones()
 
 	--local rootPos, rootAng = self:GetRootBoneOffset()
 	--rootBone.Pos, rootBone.Ang = LocalToWorld(rootPos, rootAng, self:GetPos(), self:GetAngles())
-	rootBone.Ang = self:GetAngles()
+	rootBone.Pos, rootBone.Ang = self:GetPos(), self:GetAngles()
 
 	torsoBone.Pos = self:RelativeToBone("Root", Vector(0, 0, 17))
 
@@ -76,4 +76,14 @@ function ENT:BuildBones()
 	self:AddBone("RHip")
 	self:AddBone("RKnee")
 	self:AddBone("RFoot")
+
+		-- Left leg
+	self:AddBone("LBHip")
+	self:AddBone("LBKnee")
+	self:AddBone("LBFoot")
+
+	-- Right leg
+	self:AddBone("RBHip")
+	self:AddBone("RBKnee")
+	self:AddBone("RBFoot")
 end

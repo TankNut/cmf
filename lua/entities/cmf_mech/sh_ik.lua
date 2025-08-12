@@ -1,79 +1,61 @@
 AddCSLuaFile()
 
-local rad2Deg = 180 / math.pi
-
-local function acos(rad)
-	return math.deg(math.acos(rad))
+local function toWorldAng(bone, ang)
+	return select(2, LocalToWorld(vector_origin, ang, bone.Pos, bone.Ang))
 end
 
-local function toLocalAxis(ent, axis)
-	return ent:WorldToLocal(axis + ent:GetPos())
+local function toLocalAxis(bone, axis)
+	local pos = WorldToLocal(axis + bone.Pos, angle_zero, bone.Pos, bone.Ang)
+
+	return pos
 end
 
-local function bearing(originPos, originAngle, pos)
-	pos = WorldToLocal(pos, angle_zero, originPos, originAngle)
-
-	return rad2Deg * -math.atan2(pos.y, pos.x)
+local function atan2(a, b)
+	return math.deg(math.atan2(a, b))
 end
 
-local function localToWorldAngles(localAng, origin)
-	local _, ang = LocalToWorld(vector_origin, localAng, vector_origin, origin)
-
-	return ang
+local function icos(a, b, c)
+	return math.deg(math.acos((a^2 + b^2 - c^2) / (2 * a * b)))
 end
 
-function ENT:PerformLegIK(index, leg)
+function ENT:IK_2Seg_Humanoid(leg)
+	local pos, ang = LocalToWorld(leg.Origin, leg.Rotation, leg.RootBone.Pos, leg.RootBone.Ang)
+
+	local base = {
+		Pos = pos,
+		Ang = ang
+	}
+
 	local target = leg.Pos
-	local targetNormal = leg.Normal
 
-	local length1, length2 = self.UpperLength, self.LowerLength
+	if leg.Foot then
+		leg.Foot.Pos = leg.Pos
 
-	if leg.Moving then
-		length2 = length2 + self.FootOffset
-	else
-		target = target + targetNormal * self.FootOffset
+		local footAxis = toLocalAxis(base, leg.Normal)
+		leg.Foot.Ang = toWorldAng(base, Angle(-atan2(footAxis.z, footAxis.x) + 90, 0, atan2(footAxis.z, footAxis.y) - 90))
+
+		target = target + leg.Foot.Ang:Up() * leg.FootOffset
 	end
 
-	local rootBone = self.Bones["Root"]
+	local localAxis = toLocalAxis(base, target - base.Pos)
+	local temp = {Pos = Vector(base.Pos), Ang = toWorldAng(base, Angle(0, 0, atan2(localAxis.z, localAxis.y) + 90))}
 
-	local hipPos = LocalToWorld(Vector(0, self.LegSpacing * leg.Offset, 0), angle_zero, rootBone.Pos, rootBone.Ang)
-	local axis = toLocalAxis(self, target - hipPos)
-	local dist = math.min(axis:Length(), length1 + length2)
+	localAxis = toLocalAxis(temp, target - base.Pos)
+	local distance = math.min(localAxis:Length(), leg.LengthA + leg.LengthB)
 
-	local axisAngle = axis:Angle()
+	leg.Hip.Pos = LocalToWorld(leg.Origin, angle_zero, leg.RootBone.Pos, leg.RootBone.Ang)
 
-	axisAngle.r = -bearing(hipPos, self:GetAngles(), target)
-	axisAngle:RotateAroundAxis(axisAngle:Right(), 180 - acos(
-		(dist^2 + length1^2 - length2^2) / (2 * length1 * dist)))
+	if leg.Chicken then
+		local pitch = atan2(localAxis.x, localAxis.z) + icos(distance, leg.LengthA, leg.LengthB)
 
-	local hipAng = self:LocalToWorldAngles(axisAngle)
-
-	hipAng:RotateAroundAxis(hipAng:Right(), 180)
-
-	local upperCosine = acos((length2^2 + length1^2 - dist^2) / (2 * length1 * length2))
-
-	local kneeAng = localToWorldAngles(Angle(upperCosine - 180, 0, 0), hipAng)
-	local kneePos = hipPos + hipAng:Forward() * length1
-
-	local footAng
-
-	if leg.Moving then
-		footAng = localToWorldAngles(Angle(-90, 0, 0), kneeAng)
+		leg.Hip.Ang = toWorldAng(temp, Angle(pitch - 90, 0, 0))
+		leg.Knee.Ang = toWorldAng(leg.Hip, Angle(icos(leg.LengthB, leg.LengthA, distance) + 180, 0, 0))
 	else
-		footAng = targetNormal:Angle()
+		local pitch = atan2(-localAxis.x, localAxis.z) + icos(distance, leg.LengthA, leg.LengthB)
 
-		footAng:RotateAroundAxis(footAng:Right(), -90)
-		footAng:RotateAroundAxis(targetNormal, -footAng.y + self:GetAngles().y)
+		leg.Hip.Ang = toWorldAng(temp, Angle(pitch - 90, 180, 180))
+		leg.Knee.Ang = toWorldAng(leg.Hip, Angle(icos(leg.LengthB, leg.LengthA, distance), 180, 180))
 	end
 
-	local footPos = kneePos + kneeAng:Forward() * self.LowerLength - footAng:Up() * self.FootOffset
-
-	leg.Hip.Pos = hipPos
-	leg.Hip.Ang = hipAng
-
-	leg.Knee.Pos = kneePos
-	leg.Knee.Ang = kneeAng
-
-	leg.Foot.Pos = footPos
-	leg.Foot.Ang = footAng
+	leg.Knee.Pos = leg.Hip.Pos + leg.Hip.Ang:Forward() * leg.LengthA
 end

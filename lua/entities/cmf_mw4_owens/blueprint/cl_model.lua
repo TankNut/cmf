@@ -17,5 +17,15 @@ ENT.ModelData = {
 	-- Right leg
 	cmf:ModelPart("models/mw4addon/owens_ruleg.mdl", "RHip",    {Pos = Vector(0,  24,   0), Ang = Angle(-157, 0, 0)}),
 	cmf:ModelPart("models/mw4addon/owens_rlleg.mdl", "RKnee",   {Pos = Vector(0,  8,    0), Ang = Angle(-60,  0, 0)}),
-	cmf:ModelPart("models/mw4addon/owens_rfoot.mdl", "RFoot",   {Pos = Vector(0,  0,    13)})
+	cmf:ModelPart("models/mw4addon/owens_rfoot.mdl", "RFoot",   {Pos = Vector(0,  0,    13)}),
+
+	-- Left leg
+	cmf:ModelPart("models/mw4addon/owens_luleg.mdl", "LBHip",    {Pos = Vector(0, -23.5, 0), Ang = Angle(-157, 0, 0)}),
+	cmf:ModelPart("models/mw4addon/owens_llleg.mdl", "LBKnee",   {Pos = Vector(0, -7,    0), Ang = Angle(-60,  0, 0)}),
+	cmf:ModelPart("models/mw4addon/owens_lfoot.mdl", "LBFoot",   {Pos = Vector(0,  0,    13)}),
+
+	-- Right leg
+	cmf:ModelPart("models/mw4addon/owens_ruleg.mdl", "RBHip",    {Pos = Vector(0,  24,   0), Ang = Angle(-157, 0, 0)}),
+	cmf:ModelPart("models/mw4addon/owens_rlleg.mdl", "RBKnee",   {Pos = Vector(0,  8,    0), Ang = Angle(-60,  0, 0)}),
+	cmf:ModelPart("models/mw4addon/owens_rfoot.mdl", "RBFoot",   {Pos = Vector(0,  0,    13)})
 }
