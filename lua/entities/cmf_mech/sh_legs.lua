@@ -66,8 +66,6 @@ local function clampVector2D(vel, length)
 	end
 end
 
-local groundTime = 0.25
-
 function ENT:RunGait()
 	local delta = CurTime() - self.LastGait
 	local vel = self:GetMechVelocity()
@@ -77,10 +75,30 @@ function ENT:RunGait()
 	clampVector2D(vel, self.StepSize / 4)
 
 	local cycle = self:GetWalkCycle() + delta
-	local wantsToMove = false
+	local cycleLength = 0.5
 
-	for _, leg in ipairs(self.Legs) do
-		local fraction = (cycle + leg.Timing) % 1
+	for k, leg in ipairs(self.Legs) do
+		local gaitStart = leg.Timing
+		local gaitEnd = leg.Timing + cycleLength
+
+		local fraction = 0
+		local canMove = false
+
+		if cycle >= gaitStart and cycle <= gaitEnd then
+			fraction = (cycle - gaitStart) / (gaitEnd - gaitStart)
+			canMove = true
+		elseif gaitStart < 0 then
+			if cycle >= math.abs(gaitStart) and cycle <= 1 then
+				fraction = (cycle - gaitStart) / (gaitEnd - gaitStart)
+				canMove = true
+			end
+		elseif gaitEnd > 1 then
+			if cycle + 1 >= gaitStart and cycle + 1 <= gaitEnd then
+				fraction = (cycle + 1 - gaitStart) / (gaitEnd - gaitStart)
+				canMove = true
+			end
+		end
+
 		local offset = self:LocalToWorld(leg.Offset)
 
 		if not leg.Ground then
@@ -95,30 +113,26 @@ function ENT:RunGait()
 		end
 
 		local target, normal = self:FindGround(offset + vel)
-		local hasTarget = target:Distance(leg.Ground) > 5
+		local distance = target:Distance(leg.Ground)
+		local hasTarget = distance > 5
 
-		if hasTarget or leg.Moving then
-			wantsToMove = true
-		end
-
-		-- Maybe this does it?
-		if fraction > 0.5 then
+		if canMove then
 			if hasTarget or leg.Moving then
 				leg.Target = target
 
-				local moveFraction = (fraction - groundTime) / (1 - groundTime)
-				local bezier = math.QuadraticBezier(moveFraction,
+				local bezier = math.QuadraticBezier(fraction,
 					leg.Ground,
-					LerpVector(0.5, leg.Ground, leg.Target) + Vector(0, 0, 1) * self.StepHeight,
+					LerpVector(0.5, leg.Ground, leg.Target) + Vector(0, 0, 1) * math.min(distance * 0.5, self.GroundOffset),
 					leg.Target)
 
-				leg.Pos = LerpVector(moveFraction, bezier, leg.Target)
+				leg.Pos = LerpVector(fraction, bezier, leg.Target)
 
-				leg.Normal = math.CubicBezier(moveFraction,
-					leg.OldNormal,
-					(leg.Pos - leg.Ground):GetNormalized(),
-					(leg.Pos - leg.Target):GetNormalized(),
-					normal)
+				-- leg.Normal = math.CubicBezier(fraction,
+				-- 	leg.OldNormal,
+				-- 	(leg.Pos - leg.Ground):GetNormalized(),
+				-- 	(leg.Pos - leg.Target):GetNormalized(),
+				-- 	normal)
+				leg.Normal = LerpVector(fraction, leg.OldNormal, normal)
 				leg.Normal:Normalize()
 
 				leg.Moving = true
@@ -134,12 +148,7 @@ function ENT:RunGait()
 		end
 	end
 
-	if not wantsToMove then
-		self:SetWalkCycle(0)
-	else
-		self:SetWalkCycle(cycle % 1)
-	end
-
+	self:SetWalkCycle(cycle % 1)
 	self.LastGait = CurTime()
 end
 
