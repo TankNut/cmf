@@ -10,8 +10,8 @@ function ENT:InitLegs()
 		RootBone = self.Bones.Root,
 		Rotation = Angle(0, 0, 0),
 
-		Origin = Vector(35, 35, -10),
-		Offset = Vector(55, 55, 0),
+		Origin = Vector(0, 35, 0),
+		Offset = Vector(0, 35, 0),
 
 		Solver = self.IK_2Seg_Humanoid,
 		Chicken = true,
@@ -31,8 +31,8 @@ function ENT:InitLegs()
 		RootBone = self.Bones.Root,
 		Rotation = Angle(0, 0, 0),
 
-		Origin = Vector(35, -35, -10),
-		Offset = Vector(55, -55, 0),
+		Origin = Vector(0, -35, 0),
+		Offset = Vector(0, -35, 0),
 
 		Solver = self.IK_2Seg_Humanoid,
 		Chicken = true,
@@ -40,48 +40,6 @@ function ENT:InitLegs()
 		Hip = self.Bones.RHip,
 		Knee = self.Bones.RKnee,
 		Foot = self.Bones.RFoot,
-
-		LengthA = 38,
-		LengthB = 85,
-		FootOffset = 10
-	})
-
-		self:AddLeg({
-		Timing = 0.25,
-
-		RootBone = self.Bones.Root,
-		Rotation = Angle(0, 0, 0),
-
-		Origin = Vector(-35, 35, -10),
-		Offset = Vector(-55, 55, 0),
-
-		Solver = self.IK_2Seg_Humanoid,
-		Chicken = true,
-
-		Hip = self.Bones.LBHip,
-		Knee = self.Bones.LBKnee,
-		Foot = self.Bones.LBFoot,
-
-		LengthA = 38,
-		LengthB = 85,
-		FootOffset = 10
-	})
-
-	self:AddLeg({
-		Timing = 0.75,
-
-		RootBone = self.Bones.Root,
-		Rotation = Angle(0, 0, 0),
-
-		Origin = Vector(-35, -35, -10),
-		Offset = Vector(-55, -55, 0),
-
-		Solver = self.IK_2Seg_Humanoid,
-		Chicken = true,
-
-		Hip = self.Bones.RBHip,
-		Knee = self.Bones.RBKnee,
-		Foot = self.Bones.RBFoot,
 
 		LengthA = 38,
 		LengthB = 85,
