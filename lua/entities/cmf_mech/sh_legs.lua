@@ -57,9 +57,7 @@ function ENT:UpdateLegs()
 	end
 end
 
-ENT.StepSize = 250
 ENT.GroundOffset = 110
-ENT.StepHeight = 100
 
 local function clampVector2D(vel, length)
 	if vel:Length2D() > length then
@@ -68,20 +66,50 @@ local function clampVector2D(vel, length)
 	end
 end
 
+local function remapC(val, inMin, inMax, outMin, outMax)
+	return math.Clamp(math.Remap(val, inMin, inMax, outMin, outMax), outMin, outMax)
+end
+
+function ENT:GetGaitData(vel)
+	local rate = remapC(vel, self.WalkSpeed, self.RunSpeed, 0, 1)
+
+	return Lerp(rate, 120, 180), Lerp(rate, 0.45, 0.6)
+end
+
 function ENT:RunGait()
 	local delta = CurTime() - self.LastGait
 	local vel = self:GetMechVelocity()
 
-	delta = delta * math.max(vel:Length2D() / self.StepSize, 0.5)
+	local size, length = self:GetGaitData(vel:Length2D())
+	local stepSize = size / length
+	local mul = math.max(vel:Length2D() / stepSize, 0.5) * (1 - length) * 2
 
-	clampVector2D(vel, self.StepSize / 4)
+	delta = delta * mul
+
+	clampVector2D(vel, stepSize / 4)
 
 	local cycle = self:GetWalkCycle() + delta
-	local cycleLength = 0.5
 
-	for k, leg in ipairs(self.Legs) do
+	self:SetWalkCycle(cycle % 1)
+	self.LastGait = CurTime()
+
+	if not self:GetOnGround() then
+		for _, leg in ipairs(self.Legs) do
+			leg.Pos = self:LocalToWorld(leg.Offset - Vector(0, 0, self.GroundOffset * 0.75))
+			leg.Ground = nil
+
+			leg.Normal = self:GetUp()
+		end
+
+		self:SetGaitCenter(self:GetPos())
+		self:SetWalkCycle(0)
+
+		return
+	end
+
+	for _, leg in ipairs(self.Legs) do
 		local gaitStart = leg.Timing
-		local gaitEnd = leg.Timing + cycleLength
+		local gaitEnd = leg.Timing + length
 
 		local fraction = 0
 		local canMove = false
@@ -160,8 +188,6 @@ function ENT:RunGait()
 		end
 	end
 
-	self:SetWalkCycle(cycle % 1)
-	self.LastGait = CurTime()
 end
 
 local trace
