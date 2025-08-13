@@ -120,6 +120,7 @@ function ENT:RunGait()
 			if hasTarget or leg.Moving then
 				leg.Target = target
 
+				-- Is GroundOffset still the best method to use here?
 				local bezier = math.QuadraticBezier(fraction,
 					leg.Ground,
 					LerpVector(0.5, leg.Ground, leg.Target) + Vector(0, 0, 1) * math.min(distance * 0.5, self.GroundOffset),
@@ -127,12 +128,12 @@ function ENT:RunGait()
 
 				leg.Pos = LerpVector(fraction, bezier, leg.Target)
 
-				-- leg.Normal = math.CubicBezier(fraction,
-				-- 	leg.OldNormal,
-				-- 	(leg.Pos - leg.Ground):GetNormalized(),
-				-- 	(leg.Pos - leg.Target):GetNormalized(),
-				-- 	normal)
-				leg.Normal = LerpVector(fraction, leg.OldNormal, normal)
+				local normalFraction = math.min(distance / self.GroundOffset, 1)
+
+				local mid1 = LerpVector(normalFraction, leg.OldNormal, (leg.Pos - leg.Ground):GetNormalized())
+				local mid2 = LerpVector(normalFraction, normal, (leg.Pos - leg.Target):GetNormalized())
+
+				leg.Normal = math.CubicBezier(fraction, leg.OldNormal, mid1, mid2, normal)
 				leg.Normal:Normalize()
 
 				leg.Moving = true
