@@ -29,8 +29,6 @@ function ENT:IK_2Seg_Humanoid(leg)
 	local target = leg.Pos
 
 	if leg.Foot then
-		leg.Foot.Pos = leg.Pos
-
 		local footAxis = toLocalAxis(base, leg.Normal)
 		leg.Foot.Ang = toWorldAng(base, Angle(-atan2(footAxis.z, footAxis.x) + 90, 0, atan2(footAxis.z, footAxis.y) - 90))
 
@@ -58,4 +56,8 @@ function ENT:IK_2Seg_Humanoid(leg)
 	end
 
 	leg.Knee.Pos = leg.Hip.Pos + leg.Hip.Ang:Forward() * leg.LengthA
+
+	if leg.Foot then
+		leg.Foot.Pos = leg.Knee.Pos + leg.Knee.Ang:Forward() * leg.LengthB + leg.Foot.Ang:Up() * -leg.FootOffset
+	end
 end
