@@ -77,6 +77,7 @@ function ENT:SetupDataTables()
 	self:NetworkVar("Entity", "Seat")
 
 	self:NetworkVar("Float", "WalkCycle")
+	self:NetworkVar("Vector", "GaitCenter")
 
 	self:NetworkVar("Vector", "MechVelocity")
 end
