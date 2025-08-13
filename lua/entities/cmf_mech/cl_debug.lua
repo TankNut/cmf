@@ -50,7 +50,12 @@ function ENT:DrawGait()
 			end
 		end
 
-		render.DrawLine(leg.Ground, leg.Ground + leg.OldNormal * length, forward)
-		render.DrawLine(leg.Pos, leg.Pos + leg.Normal * length, right)
+		if leg.Ground and leg.OldNormal then
+			render.DrawLine(leg.Ground, leg.Ground + leg.OldNormal * length, forward)
+		end
+
+		if leg.Pos and leg.Normal then
+			render.DrawLine(leg.Pos, leg.Pos + leg.Normal * length, right)
+		end
 	end
 end
