@@ -31,7 +31,7 @@ ENT.GroundOffset = 110
 ENT.MoveAcceleration = 200
 
 ENT.WalkSpeed = 200
-ENT.RunSpeed = 530
+ENT.RunSpeed = 600
 
 ENT.TurnRate = 90
 

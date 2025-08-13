@@ -57,9 +57,8 @@ function ENT:Initialize()
 	self:InitMovement()
 
 	self:InitBones()
-	self:InitHitboxes()
-
 	self:InitLegs()
+	self:InitHitboxes()
 
 	if CLIENT then
 		local radius = self.DrawRadius
@@ -176,9 +175,8 @@ end
 
 function ENT:OnReloaded()
 	self:InitBones()
-	self:InitHitboxes()
-
 	self:InitLegs()
+	self:InitHitboxes()
 
 	if CLIENT then
 		self:InitParts()
@@ -206,7 +204,7 @@ if CLIENT then
 		local thirdperson = seat:GetThirdPersonMode()
 
 		if thirdperson then
-			origin = self:LocalToWorld(Vector(0, 0, 50))
+			origin = self:LocalToWorld(Vector(0, 0, 20))
 
 			local tr = util.TraceHull({
 				start = origin,
