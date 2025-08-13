@@ -120,6 +120,10 @@ function ENT:RunGait()
 			if hasTarget or leg.Moving then
 				leg.Target = target
 
+				-- if CLIENT and not leg.Moving then
+				-- 	leg.Temp = self:WorldToLocal(leg.Ground):Length2D()
+				-- end
+
 				-- Is GroundOffset still the best method to use here?
 				local bezier = math.QuadraticBezier(fraction,
 					leg.Ground,
@@ -144,6 +148,11 @@ function ENT:RunGait()
 
 			leg.Normal = normal
 			leg.OldNormal = normal
+
+			-- if CLIENT then
+			-- 	print("---", _, "---")
+			-- 	print(self:WorldToLocal(leg.Target):Length2D() - leg.Temp)
+			-- end
 
 			leg.Moving = false
 		end
