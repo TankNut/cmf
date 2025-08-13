@@ -98,9 +98,6 @@ if SERVER then
 
 		local accel = self:GetMoveAcceleration() * data.Delta
 		local target = self:GetDesiredVelocity()
-		local dot = self:GetForward():Dot(data.GroundTrace.HitNormal)
-
-		target = target + (target * dot)
 
 		local ratio = (target - vel):GetNormalized()
 
