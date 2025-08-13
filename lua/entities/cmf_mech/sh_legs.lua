@@ -107,6 +107,8 @@ function ENT:RunGait()
 		return
 	end
 
+	local center = 0
+
 	for _, leg in ipairs(self.Legs) do
 		local gaitStart = leg.Timing
 		local gaitEnd = leg.Timing + length
@@ -186,8 +188,13 @@ function ENT:RunGait()
 
 			leg.Moving = false
 		end
+
+		center = center + leg.Pos:Distance(offset) - self.GroundOffset
 	end
 
+	center = center / #self.Legs
+
+	self:SetGaitCenter(self:GetPos() - Vector(0, 0, center * 0.5))
 end
 
 local trace
