@@ -12,6 +12,7 @@ function ENT:InitLegs()
 
 		Origin = Vector(0, 35, 0),
 		Offset = Vector(0, 35, 0),
+		MaxLength = 38 + 85,
 
 		Solver = self.IK_2Seg_Humanoid,
 		Chicken = true,
@@ -33,6 +34,7 @@ function ENT:InitLegs()
 
 		Origin = Vector(0, -35, 0),
 		Offset = Vector(0, -35, 0),
+		MaxLength = 38 + 85,
 
 		Solver = self.IK_2Seg_Humanoid,
 		Chicken = true,
@@ -102,7 +104,7 @@ function ENT:RunGait()
 		local offset = self:LocalToWorld(leg.Offset)
 
 		if not leg.Ground then
-			local ground, normal = self:FindGround(offset)
+			local ground, normal = self:FindGround(offset, leg.MaxLength * 2)
 
 			leg.Ground = ground
 			leg.Pos = ground
@@ -112,7 +114,7 @@ function ENT:RunGait()
 			leg.Normal = normal
 		end
 
-		local target, normal = self:FindGround(offset + vel)
+		local target, normal = self:FindGround(offset + vel, leg.MaxLength * 1.5)
 		local distance = target:Distance(leg.Ground)
 		local hasTarget = distance > 5
 
@@ -165,7 +167,7 @@ end
 local trace
 local result = {}
 
-function ENT:FindGround(offset)
+function ENT:FindGround(offset, maxLength)
 	if not trace then
 		trace = {
 			mins = Vector(-5, -5, 0),
@@ -185,7 +187,7 @@ function ENT:FindGround(offset)
 	end
 
 	trace.start = result.HitPos
-	trace.endpos = result.HitPos - self:GetUp() * 1000 -- Todo, probably not correct
+	trace.endpos = result.HitPos - self:GetUp() * maxLength
 
 	util.TraceLine(trace)
 
