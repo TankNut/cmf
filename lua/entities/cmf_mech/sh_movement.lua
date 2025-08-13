@@ -134,6 +134,7 @@ if SERVER then
 			data.Velocity = vector_origin
 
 			self:SetMechVelocity(vector_origin)
+			self:SetOnGround(false)
 
 			return
 		end
@@ -163,6 +164,7 @@ if SERVER then
 		local turnAngle = -self:GetAngles() + Angle(0, data.Yaw, 0)
 
 		self:SetMechVelocity(data.Velocity)
+		self:SetOnGround(data.OnGround)
 
 		phys:SetVelocity(data.Velocity)
 		phys:SetAngleVelocity(Vector(turnAngle.r * 10, turnAngle.p * 10, turnAngle.y / data.Delta))
