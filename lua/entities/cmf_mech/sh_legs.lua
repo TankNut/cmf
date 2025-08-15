@@ -68,6 +68,7 @@ end
 
 ENT.StepSize = {160, 220}
 ENT.Stance = {0.45, 0.65}
+ENT.ForwardLean = {1.1, 1.4}
 
 function ENT:RunGait()
 	local delta = CurTime() - self.LastGait
@@ -91,6 +92,8 @@ function ENT:RunGait()
 	delta = delta * mul
 
 	clampVector2D(vel, stepSize / 4)
+
+	vel:Div(get(self.ForwardLean))
 
 	local cycle = self:GetWalkCycle() + delta
 
