@@ -66,23 +66,27 @@ local function clampVector2D(vel, length)
 	end
 end
 
-local function remapC(val, inMin, inMax, outMin, outMax)
-	return math.Clamp(math.Remap(val, inMin, inMax, outMin, outMax), outMin, outMax)
-end
-
-function ENT:GetGaitData(vel)
-	local rate = remapC(vel, self.WalkSpeed, self.RunSpeed, 0, 1)
-
-	return Lerp(rate, 120, 180), Lerp(rate, 0.45, 0.6)
-end
+ENT.StepSize = {160, 220}
+ENT.Stance = {0.45, 0.65}
 
 function ENT:RunGait()
 	local delta = CurTime() - self.LastGait
 	local vel = self:GetMechVelocity()
+	local scale = math.Clamp(math.Remap(vel:Length2D(), self.WalkSpeed, self.RunSpeed, 0, 1), 0, 1)
 
-	local size, length = self:GetGaitData(vel:Length2D())
-	local stepSize = size / length
-	local mul = math.max(vel:Length2D() / stepSize, 0.5) * (1 - length) * 2
+	local function get(val)
+		if istable(val) then
+			return Lerp(scale, val[1], val[2])
+		elseif isfunction(val) then
+			return val(self, scale)
+		end
+
+		return val
+	end
+
+	local length = get(self.Stance)
+	local stepSize = get(self.StepSize) / length
+	local mul = math.max(vel:Length2D(), self.WalkSpeed) / stepSize * (1 - length) * 2
 
 	delta = delta * mul
 
