@@ -92,6 +92,8 @@ if SERVER then
 		return dir * self:GetDesiredMoveSpeed(ply)
 	end
 
+	-- Todo, implement https://github.com/ValveSoftware/source-sdk-2013/blob/68c8b82fdcb41b8ad5abde9fe1f0654254217b8e/src/game/shared/gamemovement.cpp#L1820
+
 	function ENT:ApplyMoveInput()
 		local data = self.MoveData
 		local vel = data.Velocity
