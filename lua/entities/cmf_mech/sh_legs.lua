@@ -11,7 +11,7 @@ function ENT:InitLegs()
 		Rotation = Angle(0, 0, 0),
 
 		Origin = Vector(0, 35, 0),
-		Offset = Vector(0, 35, 0),
+		Offset = Vector(0, 25, 0),
 		MaxLength = 38 + 85,
 
 		Solver = self.IK_2Seg_Humanoid,
@@ -33,7 +33,7 @@ function ENT:InitLegs()
 		Rotation = Angle(0, 0, 0),
 
 		Origin = Vector(0, -35, 0),
-		Offset = Vector(0, -35, 0),
+		Offset = Vector(0, -25, 0),
 		MaxLength = 38 + 85,
 
 		Solver = self.IK_2Seg_Humanoid,
