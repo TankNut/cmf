@@ -198,10 +198,10 @@ function ENT:RunGait()
 			leg.Moving = false
 		end
 
-		local sideOffset = (self:WorldToLocal(leg.Pos) - leg.Offset).x / (stepSize / 8)
+		local sideOffset = (self:WorldToLocal(leg.Pos) - leg.Offset).x / (stepSize / 4)
 
 		local y = sideOffset * leg.Offset:GetNormalized().y * sideStep
-		local z = -(leg.Pos:Distance(offset) - self.GroundOffset)
+		local z = -(leg.Pos:Distance(offset) - self.GroundOffset) / get({2, 1})
 
 		gaitOffset:Add(Vector(0, y, z))
 	end
@@ -209,7 +209,7 @@ function ENT:RunGait()
 	local oldOffset = self:GetGaitOffset()
 	local accel = 10 -- This probably needs to be a var
 
-	gaitOffset:Div(#self.Legs * 2)
+	gaitOffset:Div(#self.Legs)
 
 	gaitOffset.x = math.Approach(oldOffset.x, gaitOffset.x, delta * (oldOffset.x - gaitOffset.x) * accel)
 	gaitOffset.y = math.Approach(oldOffset.y, gaitOffset.y, delta * (oldOffset.y - gaitOffset.y) * accel)
@@ -235,10 +235,6 @@ function ENT:FindGround(offset, maxLength)
 	trace.endpos = offset
 
 	util.TraceLine(trace)
-
-	if result.Hit then
-		return result.HitPos, result.HitNormal
-	end
 
 	trace.start = result.HitPos
 	trace.endpos = result.HitPos - self:GetUp() * maxLength
