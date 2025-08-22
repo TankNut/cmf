@@ -92,19 +92,25 @@ if SERVER then
 		return dir * self:GetDesiredMoveSpeed(ply)
 	end
 
-	-- Todo, implement https://github.com/ValveSoftware/source-sdk-2013/blob/68c8b82fdcb41b8ad5abde9fe1f0654254217b8e/src/game/shared/gamemovement.cpp#L1820
+	ENT.SideFriction = 2
 
 	function ENT:ApplyMoveInput()
 		local data = self.MoveData
 		local vel = data.Velocity
 
+		local ang = self:GetAngles()
 		local accel = self:GetMoveAcceleration() * data.Delta
 		local target = self:GetDesiredVelocity()
 
-		local ratio = (target - vel):GetNormalized()
+		local diff = target - vel
+		diff:Rotate(-ang)
 
-		vel.x = math.Approach(vel.x, target.x, accel * ratio.x)
-		vel.y = math.Approach(vel.y, target.y, accel * ratio.y)
+		diff.x = math.Clamp(diff.x, -accel, accel)
+
+		diff:Rotate(ang)
+		diff.z = 0
+
+		vel:Add(diff)
 	end
 
 	function ENT:GetTurnRate()
