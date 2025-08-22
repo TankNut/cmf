@@ -195,6 +195,10 @@ function ENT:RunGait()
 			-- 	print(self:WorldToLocal(leg.Target):Length2D() - leg.Debug)
 			-- end
 
+			if SERVER then
+				self:EmitSound(")sfx_footfall_generic.wav", 100, math.Rand(95, 105))
+			end
+
 			leg.Moving = false
 		end
 
