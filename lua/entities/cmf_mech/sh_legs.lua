@@ -69,6 +69,7 @@ end
 ENT.StepSize = {160, 220}
 ENT.Stance = {0.45, 0.65}
 ENT.ForwardLean = {1.1, 1.4}
+ENT.SideStep = 10
 
 function ENT:RunGait()
 	local delta = CurTime() - self.LastGait
@@ -108,13 +109,14 @@ function ENT:RunGait()
 			leg.Normal = self:GetUp()
 		end
 
-		self:SetGaitCenter(self:GetPos())
+		self:SetGaitOffset(Vector())
 		self:SetWalkCycle(0)
 
 		return
 	end
 
-	local center = 0
+	local gaitOffset = Vector()
+	local sideStep = get(self.SideStep)
 
 	for _, leg in ipairs(self.Legs) do
 		local gaitStart = leg.Timing
@@ -160,7 +162,7 @@ function ENT:RunGait()
 				leg.Target = target
 
 				-- if CLIENT and not leg.Moving then
-				-- 	leg.Temp = self:WorldToLocal(leg.Ground):Length2D()
+				-- 	leg.Debug = self:WorldToLocal(leg.Ground):Length2D()
 				-- end
 
 				-- Is GroundOffset still the best method to use here?
@@ -190,18 +192,30 @@ function ENT:RunGait()
 
 			-- if CLIENT then
 			-- 	print("---", _, "---")
-			-- 	print(self:WorldToLocal(leg.Target):Length2D() - leg.Temp)
+			-- 	print(self:WorldToLocal(leg.Target):Length2D() - leg.Debug)
 			-- end
 
 			leg.Moving = false
 		end
 
-		center = center + leg.Pos:Distance(offset) - self.GroundOffset
+		local sideOffset = (self:WorldToLocal(leg.Pos) - leg.Offset).x / (stepSize / 8)
+
+		local y = sideOffset * leg.Offset:GetNormalized().y * sideStep
+		local z = -(leg.Pos:Distance(offset) - self.GroundOffset)
+
+		gaitOffset:Add(Vector(0, y, z))
 	end
 
-	center = center / #self.Legs
+	local oldOffset = self:GetGaitOffset()
+	local accel = 10 -- This probably needs to be a var
 
-	self:SetGaitCenter(self:GetPos() - Vector(0, 0, center * 0.5))
+	gaitOffset:Div(#self.Legs * 2)
+
+	gaitOffset.x = math.Approach(oldOffset.x, gaitOffset.x, delta * (oldOffset.x - gaitOffset.x) * accel)
+	gaitOffset.y = math.Approach(oldOffset.y, gaitOffset.y, delta * (oldOffset.y - gaitOffset.y) * accel)
+	gaitOffset.z = math.Approach(oldOffset.z, gaitOffset.z, delta * (oldOffset.z - gaitOffset.z) * accel)
+
+	self:SetGaitOffset(gaitOffset)
 end
 
 local trace

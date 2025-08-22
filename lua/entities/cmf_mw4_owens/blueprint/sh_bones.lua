@@ -8,8 +8,11 @@ function ENT:UpdateBones()
 	-- Probably nice to get some sideways lean going
 	rootBone.Ang = self:GetAngles()
 
+	local offset = self:GetGaitOffset()
+	offset:Rotate(rootBone.Ang)
+
 	rootBone.Pos = self:GetPos()
-	rootBone.Pos.z = self:GetGaitCenter().z
+	rootBone.Pos:Add(offset)
 
 	torsoBone.Pos = self:RelativeToBone("Root", Vector(0, 0, 17))
 
