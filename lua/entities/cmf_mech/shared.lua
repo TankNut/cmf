@@ -11,24 +11,37 @@ ENT.Author = "TankNut"
 
 ENT.DisableDuplicator = true
 
--- Mech fields
-ENT.DrawRadius = 200
+-- [MoveStat] indicates a value can vary based on how fast the mech is going relative to the clamped walk and run speeds (where walk = 0 and run = 1)
+-- A table value is linearly interpolated based on the movement fraction
+-- Functions are called with self and the movement fraction
+-- Every other type of value is passed along without modification
 
-ENT.Hull = {
+-- Movement related fields
+ENT.Hull = {-- The size of the mech's collision hull, this is only used for movement. Keep it off the ground so it doesn't catch on any bumps
 	Mins = Vector(-48, -48, -16),
 	Maxs = Vector(48, 48, 55)
 }
 
-ENT.GroundOffset = 110
+ENT.GroundOffset = 110 -- How far above the ground the mech sits
 
-ENT.MoveAcceleration = 400
+ENT.MoveAcceleration = 400 -- Hammer units/s of acceleration when moving or slowing down
+ENT.MaxSlope = 40 -- The steepest slope a mech can walk on, any steeper and it'll start sliding down
 
-ENT.LegSpacing = 35
+ENT.WalkSpeed = 200 -- The target speed when walking normally
+ENT.RunSpeed = 600 -- The target speed when +speed is held down
 
-ENT.UpperLength = 38
-ENT.LowerLength = 85
+ENT.TurnRate = 90 -- [MoveStat] Degrees/s the mech can turn
 
-ENT.FootOffset = 10
+-- Gait/leg related fields
+ENT.StepSize = {160, 220} -- [MoveStat] The horizontal side of each step the mech takes
+ENT.Stance = {0.45, 0.65} -- [MoveStat] Fraction of time each leg spends in the air
+ENT.ForwardLean = {1.1, 1.4} -- [MoveStat] How far off-center the mech's legs are when moving
+
+ENT.SideStep = 10 -- [MoveStat] The amount of side offset that's applied to the gait offset value
+ENT.UpStep = {2, 1} -- [MoveStat] The amount of upwards offset that's applied to the gait offset value
+
+-- Misc fields
+ENT.DrawRadius = 200 -- The radius that's added on top of ENT.Hull to determine the mech's render bounds
 
 include("sh_bones.lua")
 include("sh_helpers.lua")
