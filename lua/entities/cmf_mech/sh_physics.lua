@@ -1,7 +1,5 @@
 AddCSLuaFile()
 
-AddCSLuaFile()
-
 function ENT:InitPhysics()
 	if IsValid(self.PhysCollide) then
 		self.PhysCollide:Destroy()

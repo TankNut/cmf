@@ -31,8 +31,7 @@ ENT.LowerLength = 85
 ENT.FootOffset = 10
 
 include("sh_bones.lua")
---include("sh_gait_new.lua")
---include("sh_gait.lua")
+include("sh_helpers.lua")
 include("sh_hitboxes.lua")
 include("sh_ik.lua")
 include("sh_legs.lua")

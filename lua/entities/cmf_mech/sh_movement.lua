@@ -9,14 +9,6 @@ function ENT:InitMovement()
 	end
 end
 
-function ENT:GetMoveVelocity()
-	if CLIENT then
-		return self:GetMechVelocity()
-	else
-		return self.MoveData.Velocity
-	end
-end
-
 function ENT:GetGroundOffset()
 	return self.GroundOffset
 end
@@ -27,10 +19,6 @@ end
 
 function ENT:GetDesiredMoveSpeed(ply)
 	return ply:KeyDown(IN_SPEED) and self.RunSpeed or self.WalkSpeed
-end
-
-function ENT:GetMoveFraction()
-	return math.min(self:GetMoveVelocity():Length2D() / self.MoveFraction, 1)
 end
 
 if SERVER then

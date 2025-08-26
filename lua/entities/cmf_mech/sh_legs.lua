@@ -74,27 +74,16 @@ ENT.SideStep = 10
 function ENT:RunGait()
 	local delta = CurTime() - self.LastGait
 	local vel = self:GetMechVelocity()
-	local scale = math.Clamp(math.Remap(vel:Length2D(), self.WalkSpeed, self.RunSpeed, 0, 1), 0, 1)
 
-	local function get(val)
-		if istable(val) then
-			return Lerp(scale, val[1], val[2])
-		elseif isfunction(val) then
-			return val(self, scale)
-		end
-
-		return val
-	end
-
-	local length = get(self.Stance)
-	local stepSize = get(self.StepSize) / length
+	local length = self:GetMoveStat(self.Stance)
+	local stepSize = self:GetMoveStat(self.StepSize) / length
 	local mul = math.max(vel:Length2D(), self.WalkSpeed) / stepSize * (1 - length) * 2
 
 	delta = delta * mul
 
 	clampVector2D(vel, stepSize / 4)
 
-	vel:Div(get(self.ForwardLean))
+	vel:Div(self:GetMoveStat(self.ForwardLean))
 
 	local cycle = self:GetWalkCycle() + delta
 
@@ -116,9 +105,10 @@ function ENT:RunGait()
 	end
 
 	local gaitOffset = Vector()
-	local sideStep = get(self.SideStep)
+	local sideStep = self:GetMoveStat(self.SideStep)
+	local upStep = self:GetMoveStat(self.UpStep)
 
-	for _, leg in ipairs(self.Legs) do
+	for k, leg in ipairs(self.Legs) do
 		local gaitStart = leg.Timing
 		local gaitEnd = leg.Timing + length
 
@@ -207,7 +197,7 @@ function ENT:RunGait()
 		local sideOffset = (self:WorldToLocal(leg.Pos) - leg.Offset).x / (stepSize / 4)
 
 		local y = sideOffset * leg.Offset:GetNormalized().y * sideStep
-		local z = -(leg.Pos:Distance(offset) - self.GroundOffset) / get({2, 1})
+		local z = -(leg.Pos:Distance(offset) - self.GroundOffset) / upStep
 
 		gaitOffset:Add(Vector(0, y, z))
 	end
