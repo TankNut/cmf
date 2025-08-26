@@ -101,10 +101,6 @@ if SERVER then
 		vel:Add(diff)
 	end
 
-	function ENT:GetTurnRate()
-		return self.TurnRate
-	end
-
 	function ENT:GetDesiredAngle()
 		local data = self.MoveData
 
@@ -113,7 +109,7 @@ if SERVER then
 
 		local direction = right - left
 
-		return data.Yaw - (direction * self:GetTurnRate() * data.Delta)
+		return data.Yaw - (direction * self:GetMoveStat(self.TurnRate) * data.Delta)
 	end
 
 	function ENT:PhysicsUpdate(phys)
