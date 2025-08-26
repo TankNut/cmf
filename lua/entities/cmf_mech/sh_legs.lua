@@ -181,6 +181,10 @@ function ENT:RunGait()
 				leg.Normal = math.CubicBezier(fraction, leg.OldNormal, mid1, mid2, normal)
 				leg.Normal:Normalize()
 
+				if not leg.Moving then
+					self:OnStepStart(k, leg)
+				end
+
 				leg.Moving = true
 			end
 		elseif leg.Moving then
@@ -195,9 +199,7 @@ function ENT:RunGait()
 			-- 	print(self:WorldToLocal(leg.Target):Length2D() - leg.Debug)
 			-- end
 
-			if SERVER then
-				self:EmitSound(")sfx_footfall_generic.wav", 100, math.Rand(95, 105))
-			end
+			self:OnStepFinish(k, leg)
 
 			leg.Moving = false
 		end

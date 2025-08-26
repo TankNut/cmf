@@ -1,6 +1,6 @@
 AddCSLuaFile()
 
--- All of your custom functions can be found here
+-- Functions that are designed to be overwritten
 
 function ENT:BuildBones()
 end
@@ -9,6 +9,15 @@ function ENT:UpdateBones()
 end
 
 function ENT:BuildLegs()
+end
+
+function ENT:OnStepStart(index, leg)
+end
+
+function ENT:OnStepFinish(index, leg)
+	if SERVER then
+		self:EmitSound(")sfx_footfall_generic.wav", 100, math.Rand(95, 105))
+	end
 end
 
 if CLIENT then
