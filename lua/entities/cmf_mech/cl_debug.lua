@@ -51,7 +51,7 @@ function ENT:DrawHitboxes()
 	if not self.Debug_HitboxCache then
 		self.Debug_HitboxCache = {}
 
-		local count = table.Count(self.Hitboxes)
+		local count = table.Count(self.HitboxBones)
 		local increment = 360 / count
 
 		for i = 0, count - 1 do
@@ -61,8 +61,12 @@ function ENT:DrawHitboxes()
 
 	local i = 1
 
-	for index, hitbox in pairs(self.Hitboxes) do
-		drawBox(hitbox:GetPos(), hitbox:GetAngles(), hitbox:GetHitboxMins(), hitbox:GetHitboxMaxs(), self.Debug_HitboxCache[i])
+	for index, group in pairs(self.HitboxBones) do
+		local col = self.Debug_HitboxCache[i]
+
+		for _, hitbox in ipairs(group) do
+			drawBox(hitbox:GetPos(), hitbox:GetAngles(), hitbox:GetHitboxMins(), hitbox:GetHitboxMaxs(), col)
+		end
 
 		i = i + 1
 	end

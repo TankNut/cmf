@@ -19,7 +19,7 @@ function ENT:UpdateHitboxes()
 		local bonePos = self.Bones[bone].Pos
 		local boneAng = self.Bones[bone].Ang
 
-		for _, hitbox in pairs(group) do
+		for _, hitbox in ipairs(group) do
 			local pos, ang = LocalToWorld(hitbox:GetHitboxPos(), hitbox:GetHitboxAng(), bonePos, boneAng)
 
 			-- NaN check
