@@ -24,6 +24,10 @@ end
 
 function ENT:DrawBones()
 	for name, bone in pairs(self.Bones) do
+		render.DrawLine(bone.Pos, bone.Pos + bone.Ang:Forward() * 10, forward)
+		render.DrawLine(bone.Pos, bone.Pos + bone.Ang:Right() * 10, right)
+		render.DrawLine(bone.Pos, bone.Pos + bone.Ang:Up() * 10, up)
+
 		cmf:DrawWorldText(bone.Pos, name, true)
 	end
 end
