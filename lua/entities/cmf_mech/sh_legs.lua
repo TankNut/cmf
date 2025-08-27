@@ -28,7 +28,7 @@ function ENT:RunGait()
 
 	local length = self:GetMoveStat(self.Stance)
 	local stepSize = self:GetMoveStat(self.StepSize) / length
-	local mul = math.max(vel:Length2D(), self.WalkSpeed) / stepSize * (1 - length) * 2
+	local mul = math.max(vel:Length(), self.WalkSpeed) / stepSize * (1 - length) * 2
 
 	delta = delta * mul
 
