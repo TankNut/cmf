@@ -16,17 +16,10 @@ function ENT:UpdateBones()
 
 	torsoBone.Pos = self:RelativeToBone("Root", Vector(0, 0, 17))
 
-	local ply = self:GetDriver()
+	local torso = self:GetAngles() + self:GetTorsoAngle()
 
-	if IsValid(ply) then
-		local eyeAng = ply:LocalEyeAngles()
-
-		torsoBone.Ang = Angle(0, eyeAng.y, 0)
-		weaponBone.Ang = Angle(eyeAng.p, eyeAng.y, 0)
-	else
-		torsoBone.Ang = rootBone.Ang
-		weaponBone.Ang = rootBone.Ang
-	end
+	torsoBone.Ang = Angle(0, torso.y)
+	weaponBone.Ang = Angle(torso.p, torso.y)
 
 	weaponBone.Pos = self:RelativeToBone("Torso", Vector(2, 0, 13))
 end
