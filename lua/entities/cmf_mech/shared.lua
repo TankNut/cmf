@@ -134,6 +134,7 @@ if SERVER then
 
 		self.Seat:SetSolid(SOLID_NONE)
 		self.Seat:SetRenderMode(RENDERMODE_NONE)
+		self.Seat:DrawShadow(false)
 
 		self:DeleteOnRemove(self.Seat)
 		self:SetSeat(self.Seat)
