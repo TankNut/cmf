@@ -202,6 +202,8 @@ function ENT:OnReloaded()
 	self:InitHitboxes()
 
 	if CLIENT then
+		self.Debug_HitboxCache = nil
+
 		self:InitParts()
 	end
 end
