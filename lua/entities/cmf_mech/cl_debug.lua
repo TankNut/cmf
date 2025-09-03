@@ -2,6 +2,7 @@ local drawPhysics = CreateClientConVar("cmf_debug_physics", 0)
 local drawBones = CreateClientConVar("cmf_debug_bones", 0)
 local drawHitboxes = CreateClientConVar("cmf_debug_hitboxes", 0)
 local drawGait = CreateClientConVar("cmf_debug_gait", 0)
+local drawIK = CreateClientConVar("cmf_debug_ik", 0)
 
 local physicsColor = Color(255, 191, 0)
 
@@ -31,6 +32,7 @@ function ENT:DrawDebug()
 	if drawBones:GetBool()    then self:DrawBones() end
 	if drawHitboxes:GetBool() then self:DrawHitboxes() end
 	if drawGait:GetBool()     then self:DrawGait() end
+	if drawIK:GetBool()       then self:DrawIK() end
 end
 
 function ENT:DrawPhysics()
@@ -95,5 +97,11 @@ function ENT:DrawGait()
 		if leg.Pos and leg.Normal then
 			render.DrawLine(leg.Pos, leg.Pos + leg.Normal * length, right)
 		end
+	end
+end
+
+function ENT:DrawIK()
+	for _, leg in ipairs(self.Legs) do
+		leg.Solver(self, leg, true)
 	end
 end

@@ -18,7 +18,7 @@ ENT.Hull = {-- The size of the mech's collision hull, this is only used for move
 
 ENT.GroundOffset = 135 -- How far above the ground the mech sits
 
-ENT.MoveAcceleration = 100 -- Hammer units/s of acceleration when moving or slowing down
+ENT.MoveAcceleration = 200 -- Hammer units/s of acceleration when moving or slowing down
 ENT.MaxSlope = 40 -- The steepest slope a mech can walk on, any steeper and it'll start sliding down
 
 ENT.WalkSpeed = 200 -- The target speed when walking normally
@@ -32,7 +32,7 @@ ENT.Stance = {0.45, 0.65} -- [MoveStat] Fraction of time each leg spends in the 
 ENT.ForwardLean = {1.1, 1.3} -- [MoveStat] How far off-center the mech's legs are when moving
 
 ENT.SideStep = 10 -- [MoveStat] The amount of side offset that's applied to the gait offset value
-ENT.UpStep = {2, 1} -- [MoveStat] The amount of upwards offset that's applied to the gait offset value
+ENT.UpStep = {1.5, 1} -- [MoveStat] The amount of upwards offset that's applied to the gait offset value
 
 -- Torso fields
 ENT.TorsoRange = {Angle(), Angle()}
@@ -55,21 +55,4 @@ if CLIENT then
 	include("blueprint/cl_model.lua")
 else
 	include("blueprint/sv_hitboxes.lua")
-end
-
-if CLIENT then
-	local drawBones = GetConVar("cmf_debug_bones")
-	local skeleton = Color(191, 127, 255)
-
-	function ENT:DrawDebug()
-		BaseClass.DrawDebug(self)
-
-		if drawBones:GetBool() then
-			render.DrawLine(self.Bones.LHip.Pos, self.Bones.LKnee.Pos, skeleton)
-			render.DrawLine(self.Bones.RHip.Pos, self.Bones.RKnee.Pos, skeleton)
-
-			render.DrawLine(self.Bones.LKnee.Pos, self.Bones.LFoot.Pos + self.Bones.LFoot.Ang:Up() * self.Legs[1].FootOffset, skeleton)
-			render.DrawLine(self.Bones.RKnee.Pos, self.Bones.RFoot.Pos + self.Bones.RFoot.Ang:Up() * self.Legs[2].FootOffset, skeleton)
-		end
-	end
 end

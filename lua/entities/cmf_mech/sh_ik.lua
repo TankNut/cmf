@@ -18,7 +18,21 @@ local function icos(a, b, c)
 	return math.deg(math.acos((a^2 + b^2 - c^2) / (2 * a * b)))
 end
 
-function ENT:IK_2Seg_Humanoid(leg)
+local skeleton = Color(191, 127, 255)
+local foot = Color(127, 0, 255)
+
+function ENT:IK_2Seg_Humanoid(leg, drawDebug)
+	if drawDebug then
+		render.DrawLine(leg.Hip.Pos, leg.Knee.Pos, skeleton)
+
+		local pos = leg.Foot.Pos + leg.Foot.Ang:Up() * leg.FootOffset
+
+		render.DrawLine(leg.Knee.Pos, pos, skeleton)
+		render.DrawLine(pos, leg.Foot.Pos, foot)
+
+		return
+	end
+
 	local pos, ang = LocalToWorld(leg.Origin, leg.Rotation, leg.RootBone.Pos, leg.RootBone.Ang)
 
 	local base = {
