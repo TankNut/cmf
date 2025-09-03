@@ -1,3 +1,9 @@
+AddCSLuaFile()
+
+if CLIENT then
+	return
+end
+
 function ENT:BuildHitboxes()
 	self:AddHitbox("Torso", Vector(-30, 0, -5), Angle(0, 0, 0),   Vector(120, 60, 38))
 	self:AddHitbox("Torso", Vector(2.5, 0, -5), Angle(-90, 0, 0), Vector(55, 40, 40))

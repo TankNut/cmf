@@ -46,12 +46,11 @@ ENT.LowerLength = 85
 ENT.FootOffset = 10
 
 include("blueprint/sh_bones.lua")
+include("blueprint/sh_hitboxes.lua")
 include("blueprint/sh_legs.lua")
 
 AddCSLuaFile("blueprint/cl_model.lua")
 
 if CLIENT then
 	include("blueprint/cl_model.lua")
-else
-	include("blueprint/sv_hitboxes.lua")
 end

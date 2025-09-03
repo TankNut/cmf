@@ -1,2 +1,0 @@
-function ENT:BuildHitboxes()
-end
