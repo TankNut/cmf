@@ -228,11 +228,11 @@ if CLIENT then
 		local thirdperson = seat:GetThirdPersonMode()
 
 		if thirdperson then
-			origin = self:LocalToWorld(Vector(0, 0, 20))
+			origin = self:LocalToWorld(Vector(0, 0, 50))
 
 			local tr = util.TraceHull({
 				start = origin,
-				endpos = origin + (angles:Forward() * -250),
+				endpos = origin + (angles:Forward() * -400),
 				mask = MASK_SOLID,
 				filter = self,
 				mins = Vector(-4, -4, -4),
