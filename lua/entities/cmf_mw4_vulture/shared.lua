@@ -27,7 +27,7 @@ ENT.RunSpeed = 600 -- The target speed when +speed is held down
 ENT.TurnRate = 70 -- [MoveStat] Degrees/s the mech can turn
 
 -- Gait/leg related fields
-ENT.StepSize = {160, 250} -- [MoveStat] The forward length of each step the mech takes
+ENT.StepSize = 360 -- [MoveStat] The forward length of each step the mech takes
 ENT.Stance = {0.45, 0.65} -- [MoveStat] Fraction of time each leg spends in the air
 ENT.ForwardLean = {1.1, 1.3} -- [MoveStat] How far off-center the mech's legs are when moving
 

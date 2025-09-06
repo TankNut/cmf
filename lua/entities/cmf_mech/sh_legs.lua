@@ -27,7 +27,7 @@ function ENT:UpdateGait()
 	local vel = self:GetMechVelocity()
 
 	local length = self:GetMoveStat(self.Stance)
-	local stepSize = self:GetMoveStat(self.StepSize) / length
+	local stepSize = self:GetMoveStat(self.StepSize)
 	local mul = math.max(vel:Length(), self.WalkSpeed) / stepSize * (1 - length) * 2
 
 	delta = delta * mul
