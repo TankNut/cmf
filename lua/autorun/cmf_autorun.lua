@@ -16,6 +16,16 @@ function cmf:Hook(name)
 	end)
 end
 
+function cmf:SimpleBone(parent, pos, ang)
+	return {
+		Parent = parent,
+		Offset = {
+			Pos = pos,
+			Ang = ang
+		}
+	}
+end
+
 if CLIENT then
 	function cmf:HookLocal(name)
 		hook.Add(name, "cmf", function(...)

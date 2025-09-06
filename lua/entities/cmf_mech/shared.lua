@@ -40,10 +40,6 @@ ENT.ForwardLean = {1.1, 1.4} -- [MoveStat] How far off-center the mech's legs ar
 ENT.SideStep = 10 -- [MoveStat] The amount of side offset that's applied to the gait offset value
 ENT.UpStep = {2, 1} -- [MoveStat] The amount of upwards offset that's applied to the gait offset value
 
--- Torso fields
-ENT.TorsoRange = {Angle(-30, -90), Angle(30, 90)}
-ENT.TorsoTurnRate = Angle(90, 90)
-
 -- Misc fields
 ENT.DrawRadius = 200 -- The radius that's added on top of ENT.Hull to determine the mech's render bounds
 
@@ -54,7 +50,6 @@ include("sh_ik.lua")
 include("sh_legs.lua")
 include("sh_movement.lua")
 include("sh_physics.lua")
-include("sh_torso.lua")
 
 include("sh_blueprint.lua")
 
@@ -72,8 +67,6 @@ function ENT:Initialize()
 
 	self:InitPhysics()
 	self:InitMovement()
-
-	self:InitTorso()
 
 	self:InitBones()
 	self:InitLegs()
@@ -100,13 +93,10 @@ function ENT:SetupDataTables()
 	self:NetworkVar("Vector", "GaitOffset")
 
 	self:NetworkVar("Vector", "MechVelocity")
-	self:NetworkVar("Angle", "TorsoAngle")
 end
 
 function ENT:Think()
 	self:PhysWake()
-
-	self:UpdateTorso()
 
 	self:UpdateBones()
 	self:UpdateLegs()
@@ -221,7 +211,6 @@ if CLIENT then
 			return
 		end
 
-		self:UpdateTorso()
 		self:UpdateBones()
 
 		angles = ply:EyeAngles() + Angle(5, 0, 0)
@@ -243,7 +232,7 @@ if CLIENT then
 
 			origin = tr.HitPos
 		else
-			origin = self:RelativeToBone("Torso", Vector(50, 0, 20))
+			origin = self:BoneToWorld("Torso", Vector(50, 0, 20))
 		end
 
 		return {

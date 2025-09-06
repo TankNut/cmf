@@ -4,9 +4,9 @@ ENT.ModelData = {
 
 	-- Torso
 	cmf:ModelPart("models/mw4/vulture/vtr_torso.mdl", "Torso", {Pos = Vector(-10, 0, 0)}),
-	cmf:ModelPart("models/mw4/vulture/vtr_specia.mdl", "Torso", {Pos = Vector(70, 0, 15.5)}),
-	cmf:ModelPart("models/mw4/vulture/vtr_specia_left.mdl", "Torso", {Pos = Vector(72, 14, 3.8)}),
-	cmf:ModelPart("models/mw4/vulture/vtr_specia_right.mdl", "Torso", {Pos = Vector(72, -14, 3.8)}),
+	cmf:ModelPart("models/mw4/vulture/vtr_specia.mdl", "Chin", {Pos = Vector(0, 0, 0.5)}),
+	cmf:ModelPart("models/mw4/vulture/vtr_specia_left.mdl", "ChinGun", {Pos = Vector(0, 14, 0)}),
+	cmf:ModelPart("models/mw4/vulture/vtr_specia_right.mdl", "ChinGun", {Pos = Vector(0, -14, 0)}),
 
 	-- Weapons
 	cmf:ModelPart("models/mw4/vulture/vtr_lgun.mdl", "LWeapon"),

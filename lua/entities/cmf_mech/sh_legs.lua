@@ -8,7 +8,7 @@ function ENT:InitLegs()
 end
 
 function ENT:UpdateLegs()
-	self:RunGait()
+	self:UpdateGait()
 
 	for _, leg in ipairs(self.Legs) do
 		leg.Solver(self, leg)
@@ -22,7 +22,7 @@ local function clampVector2D(vel, length)
 	end
 end
 
-function ENT:RunGait()
+function ENT:UpdateGait()
 	local delta = CurTime() - self.LastGait
 	local vel = self:GetMechVelocity()
 

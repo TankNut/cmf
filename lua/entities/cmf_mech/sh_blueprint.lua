@@ -5,7 +5,14 @@ AddCSLuaFile()
 function ENT:BuildBones()
 end
 
-function ENT:UpdateBones()
+function ENT:UpdateRootBone(bone)
+	bone.Ang = self:GetAngles()
+
+	local offset = self:GetGaitOffset()
+	offset:Rotate(bone.Ang)
+
+	bone.Pos = self:GetPos()
+	bone.Pos:Add(offset)
 end
 
 function ENT:BuildLegs()

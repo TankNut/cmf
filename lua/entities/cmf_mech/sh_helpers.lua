@@ -19,3 +19,9 @@ function ENT:GetMoveStat(val)
 
 	return val
 end
+
+function ENT:BoneToWorld(name, pos, ang)
+	local bone = self:GetBone(name)
+
+	return LocalToWorld(pos or vector_origin, ang or angle_zero, bone.Pos, bone.Ang)
+end

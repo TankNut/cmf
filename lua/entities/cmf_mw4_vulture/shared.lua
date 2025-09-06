@@ -34,10 +34,6 @@ ENT.ForwardLean = {1.1, 1.3} -- [MoveStat] How far off-center the mech's legs ar
 ENT.SideStep = 10 -- [MoveStat] The amount of side offset that's applied to the gait offset value
 ENT.UpStep = {1.5, 1} -- [MoveStat] The amount of upwards offset that's applied to the gait offset value
 
--- Torso fields
-ENT.TorsoRange = {Angle(), Angle()}
-ENT.TorsoTurnRate = 108
-
 -- Misc fields
 ENT.DrawRadius = 200 -- The radius that's added on top of ENT.Hull to determine the mech's render bounds
 
@@ -54,4 +50,11 @@ AddCSLuaFile("blueprint/cl_model.lua")
 
 if CLIENT then
 	include("blueprint/cl_model.lua")
+end
+
+function ENT:SetupDataTables()
+	BaseClass.SetupDataTables(self)
+
+	self:NetworkVar("Angle", "TorsoAngle")
+	self:NetworkVar("Angle", "ChinAngle")
 end
