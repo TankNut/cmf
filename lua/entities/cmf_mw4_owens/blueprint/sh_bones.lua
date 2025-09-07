@@ -1,33 +1,33 @@
 AddCSLuaFile()
 
-function ENT:UpdateBones()
-	local rootBone = self.Bones["Root"]
-	local torsoBone = self.Bones["Torso"]
-	local weaponBone = self.Bones["Weapons"]
-
-	-- Probably nice to get some sideways lean going
-	rootBone.Ang = self:GetAngles()
-
-	local offset = self:GetGaitOffset()
-	offset:Rotate(rootBone.Ang)
-
-	rootBone.Pos = self:GetPos()
-	rootBone.Pos:Add(offset)
-
-	torsoBone.Pos = self:RelativeToBone("Root", Vector(0, 0, 17))
-
-	local torso = self:GetAngles() + self:GetTorsoAngle()
-
-	torsoBone.Ang = Angle(0, torso.y)
-	weaponBone.Ang = Angle(torso.p, torso.y)
-
-	weaponBone.Pos = self:RelativeToBone("Torso", Vector(2, 0, 13))
-end
-
 function ENT:BuildBones()
 	-- Body
-	self:AddBone("Torso")
-	self:AddBone("Weapons")
+	self:AddBone("Torso", {
+		Parent = "Root",
+		Offset = {
+			Pos = Vector(0, 0, 17)
+		},
+		Turret = {
+			NetworkVar = "TorsoAngle",
+			Range = Angle(30, 130),
+			Rate = 225,
+
+			NoPitch = true
+		}
+	})
+
+	self:AddBone("Weapons", {
+		Parent = "Torso",
+		Offset = {
+			Pos = Vector(2, 0, 13)
+		},
+		Turret = {
+			NetworkVar = "TorsoAngle",
+			Slave = true,
+
+			NoYaw = true
+		}
+	})
 
 	-- Left leg
 	self:AddBone("LHip")
