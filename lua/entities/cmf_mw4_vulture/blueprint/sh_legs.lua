@@ -16,18 +16,13 @@ function ENT:BuildLegs()
 		Solver = self.IK_2Seg_Humanoid,
 		Chicken = true,
 
-		Hip = self.Bones.LHip,
-		Knee = self.Bones.LKnee,
-		Foot = self.Bones.LFoot,
+		Hip = self.Bones.LeftHip,
+		Knee = self.Bones.LeftKnee,
+		Foot = self.Bones.LeftFoot,
 
 		LengthA = self.UpperLength,
 		LengthB = self.LowerLength,
 		FootOffset = self.FootOffset,
-
-		DebugBones = {
-			{self.Bones.LHip, self.Bones.LKnee},
-			{self.Bones.LKnee, self.Bones.LFoot}
-		}
 	})
 
 	self:AddLeg({
@@ -43,9 +38,9 @@ function ENT:BuildLegs()
 		Solver = self.IK_2Seg_Humanoid,
 		Chicken = true,
 
-		Hip = self.Bones.RHip,
-		Knee = self.Bones.RKnee,
-		Foot = self.Bones.RFoot,
+		Hip = self.Bones.RightHip,
+		Knee = self.Bones.RightKnee,
+		Foot = self.Bones.RightFoot,
 
 		LengthA = self.UpperLength,
 		LengthB = self.LowerLength,

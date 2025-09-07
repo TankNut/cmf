@@ -15,7 +15,7 @@ function ENT:BuildBones()
 		}
 	})
 
-	self:AddBone("LWeapon", {
+	self:AddBone("LeftWeapon", {
 		Parent = "Torso",
 		Offset = {
 			Pos = Vector(-23, 59, 22)
@@ -28,7 +28,7 @@ function ENT:BuildBones()
 		}
 	})
 
-	self:AddBone("RWeapon", {
+	self:AddBone("RightWeapon", {
 		Parent = "Torso",
 		Offset = {
 			Pos = Vector(-23, -59, 22)
@@ -69,12 +69,12 @@ function ENT:BuildBones()
 	})
 
 	-- Left leg
-	self:AddBone("LHip")
-	self:AddBone("LKnee")
-	self:AddBone("LFoot")
+	self:AddBone("LeftHip")
+	self:AddBone("LeftKnee")
+	self:AddBone("LeftFoot")
 
 	-- Right leg
-	self:AddBone("RHip")
-	self:AddBone("RKnee")
-	self:AddBone("RFoot")
+	self:AddBone("RightHip")
+	self:AddBone("RightKnee")
+	self:AddBone("RightFoot")
 end
