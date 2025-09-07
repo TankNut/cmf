@@ -52,9 +52,7 @@ if CLIENT then
 	include("blueprint/cl_model.lua")
 end
 
-function ENT:SetupDataTables()
-	BaseClass.SetupDataTables(self)
-
+function ENT:CreateNetworkVars()
 	self:NetworkVar("Angle", "TorsoAngle")
 	self:NetworkVar("Angle", "ChinAngle")
 end

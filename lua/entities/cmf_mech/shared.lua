@@ -93,6 +93,8 @@ function ENT:SetupDataTables()
 	self:NetworkVar("Vector", "GaitOffset")
 
 	self:NetworkVar("Vector", "MechVelocity")
+
+	self:CreateNetworkVars()
 end
 
 function ENT:Think()
