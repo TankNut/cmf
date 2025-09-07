@@ -49,6 +49,7 @@ function ENT:BuildBones()
 		Turret = {
 			NetworkVar = "ChinAngle",
 			Range = Angle(30, 90),
+			Rate = 108,
 
 			NoPitch = true
 		}
