@@ -33,7 +33,6 @@ function ENT:Initialize()
 		self:SetSolid(SOLID_VPHYSICS)
 
 		self:SetLagCompensated(true)
-		self:SetUseType(SIMPLE_USE)
 	end
 
 	self:SetCollisionGroup(COLLISION_GROUP_WORLD)
@@ -101,9 +100,5 @@ if CLIENT then
 		util.Effect("Impact", effectData)
 
 		return true
-	end
-else
-	function ENT:Use(ply)
-		self:GetOwner():Use(ply)
 	end
 end
