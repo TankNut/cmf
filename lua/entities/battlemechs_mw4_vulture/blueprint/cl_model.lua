@@ -15,7 +15,7 @@ ENT.ModelData = {
 
 	-- Left leg
 	battlemechs:ModelPart("models/battlemechs/mw4/vulture/vtr_luleg.mdl", "LeftHip",  {Pos = Vector(0, -11, 0), Ang = Angle(-124, 0, 0)}),
-	battlemechs:ModelPart("models/battlemechs/mw4/vulture/vtr_ldleg.mdl", "LeftKnee", {Ang = Angle(-62, 0, 0)}),
+	battlemechs:ModelPart("models/battlemechs/mw4/vulture/vtr_ldleg.mdl", "LeftKnee", {Pos = Vector(0, 1, 0), Ang = Angle(-62, 0, 0)}),
 	battlemechs:ModelPart("models/battlemechs/mw4/vulture/vtr_lfoot.mdl", "LeftFoot", {Pos = Vector(0, 0, 33)}),
 
 	-- Left foot
@@ -25,7 +25,7 @@ ENT.ModelData = {
 
 	-- Right leg
 	battlemechs:ModelPart("models/battlemechs/mw4/vulture/vtr_ruleg.mdl", "RightHip",  {Pos = Vector(0, 11, 0), Ang = Angle(-124, 0, 0)}),
-	battlemechs:ModelPart("models/battlemechs/mw4/vulture/vtr_rdleg.mdl", "RightKnee", {Ang = Angle(-60, 0, 0)}),
+	battlemechs:ModelPart("models/battlemechs/mw4/vulture/vtr_rdleg.mdl", "RightKnee", {Pos = Vector(0, -1, 0), Ang = Angle(-60, 0, 0)}),
 	battlemechs:ModelPart("models/battlemechs/mw4/vulture/vtr_rfoot.mdl", "RightFoot", {Pos = Vector(0, 0, 33)}),
 
 	-- Right foot
