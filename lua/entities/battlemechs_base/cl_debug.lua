@@ -110,6 +110,10 @@ function ENT:DebugIK()
 end
 
 function ENT:DebugTurrets()
+	local tr = self:GetAimTrace()
+
+	render.DrawLine(tr.StartPos, tr.HitPos, up, true)
+
 	for _, bone in pairs(self.Bones) do
 		local turret = bone.Turret
 		if turret and not (turret.Slave or turret.Torso) then
