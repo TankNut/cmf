@@ -108,7 +108,7 @@ function ENT:UpdateTurret(bone)
 					targetAngle:Normalize()
 				end
 			else
-				targetAngle = self:GetAngles()
+				targetAngle = self.Bones.Root.Ang
 			end
 		end
 
