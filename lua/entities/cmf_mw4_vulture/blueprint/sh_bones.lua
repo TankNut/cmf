@@ -22,8 +22,9 @@ function ENT:BuildBones()
 		},
 		Turret = {
 			NetworkVar = "LeftWeaponAngle",
-			Range = {Angle(-90, -15), Angle(90, 30)},
-			Rate = 108
+			Pitch = {-90, 90},
+			Yaw = {-15, 30},
+			Rate = 108,
 		}
 	})
 
@@ -34,7 +35,8 @@ function ENT:BuildBones()
 		},
 		Turret = {
 			NetworkVar = "RightWeaponAngle",
-			Range = {Angle(-90, -30), Angle(90, 15)},
+			Pitch = {-90, 90},
+			Yaw = {-30, 15},
 			Rate = 108
 		}
 	})
@@ -46,7 +48,8 @@ function ENT:BuildBones()
 		},
 		Turret = {
 			NetworkVar = "ChinAngle",
-			Range = Angle(30, 90),
+			Pitch = {-30, 30},
+			Yaw = {-90, 90},
 			Rate = 108,
 
 			NoPitch = true

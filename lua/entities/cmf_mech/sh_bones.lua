@@ -62,8 +62,8 @@ function ENT:UpdateBone(bone)
 	updatedBones[bone.Name] = true
 end
 
-local function approachAngle(from, to, delta, mins, maxs)
-	if mins == 0 and maxs == 0 then
+local function approachAngle(from, to, delta, range)
+	if not istable(range) then
 		return math.ApproachAngle(from, to, delta)
 	end
 
@@ -72,7 +72,7 @@ local function approachAngle(from, to, delta, mins, maxs)
 
 	local diff = math.AngleDifference(to, from)
 
-	if from + diff < mins or from + diff > maxs then
+	if from + diff < range[1] or from + diff > range[2] then
 		diff = -diff
 	end
 
@@ -109,16 +109,21 @@ function ENT:UpdateTurret(bone)
 		end
 
 		-- Turn range
-		local range = config.Range or 0
-		local mins, maxs
+		local pitchRange = config.Pitch
+		local yawRange = config.Yaw
 
-		if istable(range) then
-			mins, maxs = range[1], config.Range[2]
-		elseif isangle(range) then
-			mins, maxs = -range, range
-		else
-			mins = Angle(-range, -range)
-			maxs = Angle(range, range)
+		local relTargetAngle = targetAngle - forwardAngle
+
+		if istable(pitchRange) then
+			relTargetAngle.p = math.Clamp(math.NormalizeAngle(relTargetAngle.p), pitchRange[1], pitchRange[2])
+		elseif isnumber(pitchRange) then
+			relTargetAngle.p = pitchRange
+		end
+
+		if istable(yawRange) then
+			relTargetAngle.y = math.Clamp(math.NormalizeAngle(relTargetAngle.y), yawRange[1], yawRange[2])
+		elseif isnumber(yawRange) then
+			relTargetAngle.y = yawRange
 		end
 
 		-- Turn rate
@@ -131,28 +136,18 @@ function ENT:UpdateTurret(bone)
 			pitchRate, yawRate = rate, rate
 		end
 
-		local relTargetAngle = targetAngle - forwardAngle
-
-		if mins.p != 0 and maxs.p != 0 then
-			relTargetAngle.p = math.Clamp(math.NormalizeAngle(relTargetAngle.p), mins.p, maxs.p)
-		end
-
-		if mins.y != 0 and maxs.y != 0 then
-			relTargetAngle.y = math.Clamp(math.NormalizeAngle(relTargetAngle.y), mins.y, maxs.y)
-		end
-
 		local delta = self.BoneDelta
 
 		if pitchRate == 0 then
 			ang.p = relTargetAngle.p
 		else
-			ang.p = approachAngle(ang.p, relTargetAngle.p, pitchRate * delta, mins.p, maxs.p)
+			ang.p = approachAngle(ang.p, relTargetAngle.p, pitchRate * delta, pitchRange)
 		end
 
 		if yawRate == 0 then
 			ang.y = relTargetAngle.y
 		else
-			ang.y = approachAngle(ang.y, relTargetAngle.y, pitchRate * delta, mins.y, maxs.y)
+			ang.y = approachAngle(ang.y, relTargetAngle.y, pitchRate * delta, yawRange)
 		end
 
 		self["Set" .. config.NetworkVar](self, ang)

@@ -9,7 +9,8 @@ function ENT:BuildBones()
 		},
 		Turret = {
 			NetworkVar = "TorsoAngle",
-			Range = Angle(30, 130),
+			Pitch = {-30, 30},
+			Yaw = {-130, 130},
 			Rate = 225,
 
 			NoPitch = true
