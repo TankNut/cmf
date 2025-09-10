@@ -26,7 +26,7 @@ end
 
 function ENT:OnStepFinish(index, leg)
 	if SERVER then
-		self:EmitSound(")sfx_footfall_generic.wav", 100, math.Rand(95, 105))
+		sound.Play(")sfx_footfall_generic.wav", leg.Pos, 100, math.Rand(95, 105))
 	end
 end
 
