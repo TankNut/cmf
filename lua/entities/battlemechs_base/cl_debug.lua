@@ -1,8 +1,9 @@
-local drawPhysics = CreateClientConVar("battlemechs_debug_physics", 0)
-local drawBones = CreateClientConVar("battlemechs_debug_bones", 0)
-local drawHitboxes = CreateClientConVar("battlemechs_debug_hitboxes", 0)
-local drawGait = CreateClientConVar("battlemechs_debug_gait", 0)
-local drawIK = CreateClientConVar("battlemechs_debug_ik", 0)
+local methods = {"Physics", "Bones", "Hitboxes", "Gait", "IK", "Turrets"}
+local convars = {}
+
+for index, name in ipairs(methods) do
+	convars[index] = CreateClientConVar("battlemechs_debug_" .. string.lower(name), 0)
+end
 
 local physicsColor = Color(255, 191, 0)
 
@@ -28,18 +29,20 @@ local function drawBox(pos, ang, mins, maxs, color)
 end
 
 function ENT:DrawDebug()
-	if drawPhysics:GetBool()  then self:DrawPhysics() end
-	if drawBones:GetBool()    then self:DrawBones() end
-	if drawHitboxes:GetBool() then self:DrawHitboxes() end
-	if drawGait:GetBool()     then self:DrawGait() end
-	if drawIK:GetBool()       then self:DrawIK() end
+	for index, name in ipairs(methods) do
+		local convar = convars[index]
+
+		if convar:GetBool() and self["Debug" .. name] then
+			self["Debug" .. name](self)
+		end
+	end
 end
 
-function ENT:DrawPhysics()
+function ENT:DebugPhysics()
 	drawBox(self:GetPos(), self:GetAngles(), self.Hull.Mins, self.Hull.Maxs, physicsColor)
 end
 
-function ENT:DrawBones()
+function ENT:DebugBones()
 	for name, bone in pairs(self.Bones) do
 		render.DrawLine(bone.Pos, bone.Pos + bone.Ang:Forward() * 10, forward)
 		render.DrawLine(bone.Pos, bone.Pos + bone.Ang:Right() * 10, right)
@@ -49,7 +52,7 @@ function ENT:DrawBones()
 	end
 end
 
-function ENT:DrawHitboxes()
+function ENT:DebugHitboxes()
 	if not self.Debug_HitboxCache then
 		self.Debug_HitboxCache = {}
 
@@ -74,7 +77,7 @@ function ENT:DrawHitboxes()
 	end
 end
 
-function ENT:DrawGait()
+function ENT:DebugGait()
 	for _, leg in ipairs(self.Legs) do
 		for k, pos in ipairs({leg.Ground, leg.Pos, leg.Target}) do
 			local screen = pos:ToScreen()
@@ -100,7 +103,7 @@ function ENT:DrawGait()
 	end
 end
 
-function ENT:DrawIK()
+function ENT:DebugIK()
 	for _, leg in ipairs(self.Legs) do
 		leg.Solver(self, leg, true)
 	end
