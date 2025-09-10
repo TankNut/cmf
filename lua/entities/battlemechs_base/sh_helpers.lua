@@ -54,9 +54,14 @@ function ENT:GetViewOrigin()
 end
 
 function ENT:GetAimTrace()
-	local ply = self:GetDriver()
+	local pos, ang = self:GetViewOrigin()
 
-	if not IsValid(ply) then
-		return
-	end
+	return util.TraceHull({
+		start = pos,
+		endpos = pos + ang:Forward() * 56756,
+		mask = MASK_SOLID,
+		filter = self,
+		mins = Vector(-4, -4, -4),
+		maxs = Vector(4, 4, 4),
+	})
 end
