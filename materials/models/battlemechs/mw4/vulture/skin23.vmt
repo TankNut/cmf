@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/battlemechs/mw4/vulture/skin23"
+	"$halflambert" 1
+}
