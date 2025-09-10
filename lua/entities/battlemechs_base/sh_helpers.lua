@@ -28,7 +28,7 @@ end
 
 function ENT:GetViewOrigin()
 	local ply = self:GetDriver()
-	local ang = IsValid(ply) and ply:EyeAngles() or self:GetAngles()
+	local ang = IsValid(ply) and ply:LocalEyeAngles() or self:GetAngles()
 
 	local thirdperson = self:GetSeat():GetThirdPersonMode()
 
