@@ -12,7 +12,7 @@ function ENT:AddPart(data)
 
 	table.insert(self.Parts, data)
 
-	if data.Type == cmf.MODEL then
+	if data.Type == battlemechs.MODEL then
 		self:CreatePartEntity(data)
 	end
 end
