@@ -45,7 +45,7 @@ function ENT:DrawBones()
 		render.DrawLine(bone.Pos, bone.Pos + bone.Ang:Right() * 10, right)
 		render.DrawLine(bone.Pos, bone.Pos + bone.Ang:Up() * 10, up)
 
-		cmf:DrawWorldText(bone.Pos, name, true)
+		battlemechs:DrawWorldText(bone.Pos, name, true)
 	end
 end
 

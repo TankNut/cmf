@@ -54,7 +54,7 @@ if CLIENT then
 		cam.Start2D()
 			surface.SetFont("BudgetLabel")
 
-			local w, h = surface.GetFontSize("BudgetLabel", text)
+			local w, h = surface.GetTextSize("BudgetLabel", text)
 
 			surface.SetTextColor(255, 255, 255, 255)
 			surface.SetTextPos(screen.x - w * 0.5, screen.y - h * 0.5)
