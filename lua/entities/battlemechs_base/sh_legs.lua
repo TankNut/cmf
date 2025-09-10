@@ -41,9 +41,11 @@ function ENT:UpdateGait()
 	self:SetWalkCycle(cycle % 1)
 	self.LastGait = CurTime()
 
+	local groundOffset = self:GetGroundOffset()
+
 	if not self:GetOnGround() then
 		for _, leg in ipairs(self.Legs) do
-			leg.Pos = self:LocalToWorld(leg.Offset - Vector(0, 0, self.GroundOffset * 0.75))
+			leg.Pos = self:LocalToWorld(leg.Offset - Vector(0, 0, groundOffset * 0.75))
 			leg.Ground = nil
 
 			leg.Normal = self:GetUp()
@@ -109,12 +111,12 @@ function ENT:UpdateGait()
 				-- Is GroundOffset still the best method to use here?
 				local bezier = math.QuadraticBezier(fraction,
 					leg.Ground,
-					LerpVector(0.5, leg.Ground, leg.Target) + Vector(0, 0, 1) * math.min(distance * 0.5, self.GroundOffset),
+					LerpVector(0.5, leg.Ground, leg.Target) + Vector(0, 0, 1) * math.min(distance * 0.5, groundOffset),
 					leg.Target)
 
 				leg.Pos = LerpVector(fraction, bezier, leg.Target)
 
-				local normalFraction = math.min(distance / self.GroundOffset, 1)
+				local normalFraction = math.min(distance / groundOffset, 1)
 
 				local mid1 = LerpVector(normalFraction, leg.OldNormal, (leg.Pos - leg.Ground):GetNormalized())
 				local mid2 = LerpVector(normalFraction, normal, (leg.Pos - leg.Target):GetNormalized())
@@ -148,7 +150,7 @@ function ENT:UpdateGait()
 		local sideOffset = (self:WorldToLocal(leg.Pos) - leg.Offset).x / (stepSize / 4)
 
 		local y = sideOffset * leg.Offset:GetNormalized().y * sideStep
-		local z = -(leg.Pos:Distance(offset) - self.GroundOffset) / upStep
+		local z = -(leg.Pos:Distance(offset) - groundOffset) / upStep
 
 		gaitOffset:Add(Vector(0, y, z))
 	end
