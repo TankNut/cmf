@@ -100,11 +100,11 @@ function ENT:UpdateTurret(bone)
 		else
 			local ply = self:GetDriver()
 
-			-- Todo: Change this
-			targetAngle = IsValid(ply) and ply:LocalEyeAngles() or self:GetAngles()
-
-			if IsValid(ply) and ply:KeyDown(IN_WALK) and bone.Name == "Torso" then
+			if config.Torso and IsValid(ply) and ply:KeyDown(IN_WALK) then
 				targetAngle = ang + forwardAngle
+			else
+				targetAngle = (self.BoneTrace.HitPos - bone.Pos):Angle()
+				targetAngle:Normalize()
 			end
 		end
 
@@ -166,6 +166,7 @@ end
 
 function ENT:UpdateBones()
 	self.BoneDelta = CurTime() - self.LastBoneThink
+	self.BoneTrace = self:GetAimTrace()
 
 	updatedBones = {}
 

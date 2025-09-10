@@ -4,14 +4,14 @@ ENT.ModelData = {
 
 	-- Torso
 	battlemechs:ModelPart("models/battlemechs/mw4/vulture/vtr_torso.mdl", "Torso", {Pos = Vector(-10, 0, 0)}),
-	battlemechs:ModelPart("models/battlemechs/mw4/vulture/vtr_specia.mdl", "Chin", {Pos = Vector(0, 0, 0.5)}),
+	battlemechs:ModelPart("models/battlemechs/mw4/vulture/vtr_specia.mdl", "Chin", {Pos = Vector(0, 0, 13.5)}),
 
 	battlemechs:ModelPart("models/battlemechs/mw4/vulture/vtr_specia_left.mdl", "ChinGun", {Pos = Vector(0, 14, 0)}),
 	battlemechs:ModelPart("models/battlemechs/mw4/vulture/vtr_specia_right.mdl", "ChinGun", {Pos = Vector(0, -14, 0)}),
 
 	-- Weapons
-	battlemechs:ModelPart("models/battlemechs/mw4/vulture/vtr_lgun.mdl", "LeftWeapon"),
-	battlemechs:ModelPart("models/battlemechs/mw4/vulture/vtr_rgun.mdl", "RightWeapon"),
+	battlemechs:ModelPart("models/battlemechs/mw4/vulture/vtr_lgun.mdl", "LeftWeapon", {Pos = Vector(0, -10, 0)}),
+	battlemechs:ModelPart("models/battlemechs/mw4/vulture/vtr_rgun.mdl", "RightWeapon", {Pos = Vector(0, 10, 0)}),
 
 	-- Left leg
 	battlemechs:ModelPart("models/battlemechs/mw4/vulture/vtr_luleg.mdl", "LeftHip",  {Pos = Vector(0, -11, 0), Ang = Angle(-124, 0, 0)}),

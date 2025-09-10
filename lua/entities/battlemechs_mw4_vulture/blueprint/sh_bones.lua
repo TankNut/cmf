@@ -11,14 +11,15 @@ function ENT:BuildBones()
 			NetworkVar = "TorsoAngle",
 			Rate = 108,
 
-			NoPitch = true
+			NoPitch = true,
+			Torso = true
 		}
 	})
 
 	self:AddBone("LeftWeapon", {
 		Parent = "Torso",
 		Offset = {
-			Pos = Vector(-23, 59, 22)
+			Pos = Vector(-23, 69, 22)
 		},
 		Turret = {
 			NetworkVar = "LeftWeaponAngle",
@@ -31,7 +32,7 @@ function ENT:BuildBones()
 	self:AddBone("RightWeapon", {
 		Parent = "Torso",
 		Offset = {
-			Pos = Vector(-23, -59, 22)
+			Pos = Vector(-23, -69, 22)
 		},
 		Turret = {
 			NetworkVar = "RightWeaponAngle",
@@ -44,13 +45,13 @@ function ENT:BuildBones()
 	self:AddBone("Chin", {
 		Parent = "Torso",
 		Offset = {
-			Pos = Vector(70, 0, 15)
+			Pos = Vector(70, 0, 1)
 		},
 		Turret = {
 			NetworkVar = "ChinAngle",
 			Pitch = {-30, 30},
 			Yaw = {-90, 90},
-			Rate = 108,
+			Rate = 200,
 
 			NoPitch = true
 		}
@@ -59,7 +60,7 @@ function ENT:BuildBones()
 	self:AddBone("ChinGun", {
 		Parent = "Chin",
 		Offset = {
-			Pos = Vector(2, 0, -14)
+			Pos = Vector(2, 0, 0)
 		},
 		Turret = {
 			NetworkVar = "ChinAngle",

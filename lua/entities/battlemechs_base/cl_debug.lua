@@ -108,3 +108,23 @@ function ENT:DebugIK()
 		leg.Solver(self, leg, true)
 	end
 end
+
+function ENT:DebugTurrets()
+	for _, bone in pairs(self.Bones) do
+		local turret = bone.Turret
+		if turret and not (turret.Slave or turret.Torso) then
+			local parent = self:GetBone(bone.Parent)
+			local forwardAngle
+
+			if parent then
+				forwardAngle = parent.Ang
+			else
+				forwardAngle = self:GetAngles()
+			end
+
+			local ang = forwardAngle + self["Get" .. turret.NetworkVar](self)
+
+			render.DrawLine(bone.Pos, bone.Pos + ang:Forward() * 56756, forward, true)
+		end
+	end
+end
