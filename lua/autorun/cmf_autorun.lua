@@ -84,12 +84,14 @@ else
 
 		if IsValid(mech) then
 			ply:SetNWEntity("cmf.mech", mech)
+			ply:DrawShadow(false)
 		end
 	end)
 
 	hook.Add("PlayerLeaveVehicle", "cmf", function(ply, vehicle)
 		if IsValid(vehicle._cmfMech) then
 			ply:SetNWEntity("cmf.mech", NULL)
+			ply:DrawShadow(true)
 		end
 	end)
 end
