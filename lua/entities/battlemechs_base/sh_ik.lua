@@ -34,6 +34,7 @@ function ENT:IK_2Seg_Humanoid(leg, drawDebug)
 	end
 
 	local pos, ang = LocalToWorld(leg.Origin, leg.Rotation, leg.RootBone.Pos, leg.RootBone.Ang)
+	ang.r = 0
 
 	local base = {
 		Pos = pos,
