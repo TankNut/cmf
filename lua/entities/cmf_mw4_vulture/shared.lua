@@ -55,4 +55,7 @@ end
 function ENT:CreateNetworkVars()
 	self:NetworkVar("Angle", "TorsoAngle")
 	self:NetworkVar("Angle", "ChinAngle")
+
+	self:NetworkVar("Angle", "LeftWeaponAngle")
+	self:NetworkVar("Angle", "RightWeaponAngle")
 end

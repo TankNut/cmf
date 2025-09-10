@@ -21,10 +21,9 @@ function ENT:BuildBones()
 			Pos = Vector(-23, 59, 22)
 		},
 		Turret = {
-			NetworkVar = "TorsoAngle",
-			Slave = true,
-
-			NoYaw = true
+			NetworkVar = "LeftWeaponAngle",
+			Range = {Angle(-90, -15), Angle(90, 30)},
+			Rate = 108
 		}
 	})
 
@@ -34,10 +33,9 @@ function ENT:BuildBones()
 			Pos = Vector(-23, -59, 22)
 		},
 		Turret = {
-			NetworkVar = "TorsoAngle",
-			Slave = true,
-
-			NoYaw = true
+			NetworkVar = "RightWeaponAngle",
+			Range = {Angle(-90, -30), Angle(90, 15)},
+			Rate = 108
 		}
 	})
 
