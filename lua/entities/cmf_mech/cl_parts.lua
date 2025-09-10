@@ -28,6 +28,10 @@ function ENT:CreatePartEntity(part)
 end
 
 function ENT:DrawParts(flags, renderGroup)
+	if self.FirstPersonSettings.HideParts and LocalPlayer() == self:GetDriver() and not self:GetSeat():GetThirdPersonMode() then
+		return
+	end
+
 	for _, part in ipairs(self.Parts) do
 		if part.RenderGroup == RENDERGROUP_BOTH or part.RenderGroup == renderGroup then
 			self:DrawPart(part, flags)
@@ -52,7 +56,6 @@ function ENT:DrawModelPart(part, flags)
 	ent:SetPos(pos)
 	ent:SetAngles(ang)
 
-	ent:SetupBones()
 	ent:DrawModel(flags)
 end
 

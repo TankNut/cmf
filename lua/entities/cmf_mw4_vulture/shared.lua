@@ -34,6 +34,19 @@ ENT.ForwardLean = {1.1, 1.3} -- [MoveStat] How far off-center the mech's legs ar
 ENT.SideStep = 10 -- [MoveStat] The amount of side offset that's applied to the gait offset value
 ENT.UpStep = {1.5, 1} -- [MoveStat] The amount of upwards offset that's applied to the gait offset value
 
+-- Camera
+ENT.FirstPersonSettings = {
+	Bone = "Torso",
+	Pos = Vector(-23, 0, 70),
+
+	HideParts = true
+}
+
+ENT.ThirdPersonSettings = {
+	Distance = 400,
+	Pos = Vector(0, 0, 120)
+}
+
 -- Misc fields
 ENT.DrawRadius = 200 -- The radius that's added on top of ENT.Hull to determine the mech's render bounds
 

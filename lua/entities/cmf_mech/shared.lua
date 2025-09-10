@@ -40,6 +40,19 @@ ENT.ForwardLean = {1.1, 1.4} -- [MoveStat] How far off-center the mech's legs ar
 ENT.SideStep = 10 -- [MoveStat] The amount of side offset that's applied to the gait offset value
 ENT.UpStep = {2, 1} -- [MoveStat] The amount of upwards offset that's applied to the gait offset value
 
+-- Camera
+ENT.FirstPersonSettings = {
+	Bone = nil,
+	Pos = Vector(0, 0, 0)
+}
+
+ENT.ThirdPersonSettings = {
+	Distance = 400,
+	Pos = Vector(0, 0, 100),
+
+	HideParts = true
+}
+
 -- Misc fields
 ENT.DrawRadius = 200 -- The radius that's added on top of ENT.Hull to determine the mech's render bounds
 
@@ -120,6 +133,7 @@ if SERVER then
 		self.Seat:Spawn()
 
 		self.Seat:SetParent(self)
+		self.Seat:SetTransmitWithParent(true)
 
 		self.Seat:SetLocalPos(vector_origin)
 		self.Seat:SetLocalAngles(angle_zero)
@@ -202,6 +216,7 @@ end
 
 if CLIENT then
 	function ENT:PrePlayerDraw(ply, flags)
+		--ply:SetPos(self:LocalToWorld(Vector(0, 0, -50)))
 		return true
 	end
 
@@ -215,27 +230,7 @@ if CLIENT then
 
 		self:UpdateBones()
 
-		angles = ply:EyeAngles() + Angle(5, 0, 0)
-
-		local seat = self:GetSeat()
-		local thirdperson = seat:GetThirdPersonMode()
-
-		if thirdperson then
-			origin = self:LocalToWorld(Vector(0, 0, 50))
-
-			local tr = util.TraceHull({
-				start = origin,
-				endpos = origin + (angles:Forward() * -400),
-				mask = MASK_SOLID,
-				filter = self,
-				mins = Vector(-4, -4, -4),
-				maxs = Vector(4, 4, 4),
-			})
-
-			origin = tr.HitPos
-		else
-			origin = self:BoneToWorld("Torso", Vector(50, 0, 20))
-		end
+		origin, angles = self:GetViewOrigin()
 
 		return {
 			origin = origin,
@@ -243,7 +238,7 @@ if CLIENT then
 			fov = fov,
 			znear = znear,
 			zfar = zfar,
-			drawviewer = self:GetSeat():GetThirdPersonMode()
+			drawviewer = thirdperson
 		}
 	end
 
