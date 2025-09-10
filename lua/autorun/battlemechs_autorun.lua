@@ -1,11 +1,11 @@
-cmf = cmf or {}
+battlemechs = battlemechs or {}
 
-function cmf:GetMech(ply)
-	return ply:GetNWEntity("cmf.mech")
+function battlemechs:GetMech(ply)
+	return ply:GetNWEntity("battlemechs.mech")
 end
 
-function cmf:Hook(name)
-	hook.Add(name, "cmf", function(ply, ...)
+function battlemechs:Hook(name)
+	hook.Add(name, "battlemechs", function(ply, ...)
 		local mech = self:GetMech(ply)
 
 		if not IsValid(mech) or not mech[name] then
@@ -16,7 +16,7 @@ function cmf:Hook(name)
 	end)
 end
 
-function cmf:SimpleBone(parent, pos, ang)
+function battlemechs:SimpleBone(parent, pos, ang)
 	return {
 		Parent = parent,
 		Offset = {
@@ -27,8 +27,8 @@ function cmf:SimpleBone(parent, pos, ang)
 end
 
 if CLIENT then
-	function cmf:HookLocal(name)
-		hook.Add(name, "cmf", function(...)
+	function battlemechs:HookLocal(name)
+		hook.Add(name, "battlemechs", function(...)
 			local mech = self:GetMech(LocalPlayer())
 
 			if not IsValid(mech) or not mech[name] then
@@ -39,11 +39,11 @@ if CLIENT then
 		end)
 	end
 
-	cmf:Hook("CalcView")
-	cmf:Hook("PrePlayerDraw")
-	cmf:Hook("PostPlayerDraw")
+	battlemechs:Hook("CalcView")
+	battlemechs:Hook("PrePlayerDraw")
+	battlemechs:Hook("PostPlayerDraw")
 
-	function cmf:DrawWorldText(pos, text, noz)
+	function battlemechs:DrawWorldText(pos, text, noz)
 		local screen = pos:ToScreen()
 
 		if not screen.visible then
@@ -64,9 +64,9 @@ if CLIENT then
 		cam.IgnoreZ(false)
 	end
 
-	cmf.MODEL = 1
+	battlemechs.MODEL = 1
 
-	function cmf:ModelPart(mdl, bone, data)
+	function battlemechs:ModelPart(mdl, bone, data)
 		data = data or {}
 
 		data.Type = self.MODEL
@@ -79,18 +79,18 @@ if CLIENT then
 		return data
 	end
 else
-	hook.Add("PlayerEnteredVehicle", "cmf", function(ply, vehicle)
-		local mech = vehicle._cmfMech
+	hook.Add("PlayerEnteredVehicle", "battlemechs", function(ply, vehicle)
+		local mech = vehicle._battlemech
 
 		if IsValid(mech) then
-			ply:SetNWEntity("cmf.mech", mech)
+			ply:SetNWEntity("battlemechs.mech", mech)
 			ply:DrawShadow(false)
 		end
 	end)
 
 	hook.Add("PlayerLeaveVehicle", "cmf", function(ply, vehicle)
-		if IsValid(vehicle._cmfMech) then
-			ply:SetNWEntity("cmf.mech", NULL)
+		if IsValid(vehicle._battlemech) then
+			ply:SetNWEntity("battlemechs.mech", NULL)
 			ply:DrawShadow(true)
 		end
 	end)

@@ -35,7 +35,7 @@ end
 
 if SERVER then
 	function ENT:AddHitbox(bone, pos, ang, size)
-		local ent = ents.Create("cmf_hitbox")
+		local ent = ents.Create("batthemechs_hitbox")
 		local mins = Vector(0, -size.y * 0.5, -size.z * 0.5)
 		local maxs = Vector(size.x, size.y * 0.5, size.z * 0.5)
 

@@ -1,9 +1,9 @@
 AddCSLuaFile()
 
-ENT.Base = "cmf_mech"
+ENT.Base = "battlemechs_base"
 
 ENT.PrintName = "Owens"
-ENT.Category = "CMF: Mechwarrior 4"
+ENT.Category = "Battlemechs: MW4"
 
 ENT.Author = "TankNut"
 

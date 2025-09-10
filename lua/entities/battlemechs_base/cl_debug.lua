@@ -1,8 +1,8 @@
-local drawPhysics = CreateClientConVar("cmf_debug_physics", 0)
-local drawBones = CreateClientConVar("cmf_debug_bones", 0)
-local drawHitboxes = CreateClientConVar("cmf_debug_hitboxes", 0)
-local drawGait = CreateClientConVar("cmf_debug_gait", 0)
-local drawIK = CreateClientConVar("cmf_debug_ik", 0)
+local drawPhysics = CreateClientConVar("battlemechs_debug_physics", 0)
+local drawBones = CreateClientConVar("battlemechs_debug_bones", 0)
+local drawHitboxes = CreateClientConVar("battlemechs_debug_hitboxes", 0)
+local drawGait = CreateClientConVar("battlemechs_debug_gait", 0)
+local drawIK = CreateClientConVar("battlemechs_debug_ik", 0)
 
 local physicsColor = Color(255, 191, 0)
 

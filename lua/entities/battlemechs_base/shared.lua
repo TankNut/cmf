@@ -125,7 +125,7 @@ end
 if SERVER then
 	function ENT:CreateSeat()
 		self.Seat = ents.Create("prop_vehicle_prisoner_pod")
-		self.Seat._cmfMech = self
+		self.Seat._battlemech = self
 
 		self.Seat:SetModel("models/props_lab/cactus.mdl")
 		self.Seat:SetKeyValue("limitview", 0, 0)

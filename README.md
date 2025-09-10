@@ -1,2 +1,2 @@
-# cmf
- A Garry's Mod framework that enables custom, procedural mechs.
+# Battlemechs
+A Garry's Mod addon based around mech combat

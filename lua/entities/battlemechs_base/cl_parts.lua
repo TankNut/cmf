@@ -60,7 +60,7 @@ function ENT:DrawModelPart(part, flags)
 end
 
 function ENT:DrawPart(part, flags)
-	if part.Type == cmf.MODEL then
+	if part.Type == battlemechs.MODEL then
 		self:DrawModelPart(part, flags)
 	end
 end
