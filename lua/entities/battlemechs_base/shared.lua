@@ -1,4 +1,5 @@
 AddCSLuaFile()
+DEFINE_BASECLASS("base_anim")
 
 ENT.AutomaticFrameAdvance = true
 
@@ -72,6 +73,14 @@ AddCSLuaFile("cl_parts.lua")
 if CLIENT then
 	include("cl_debug.lua")
 	include("cl_parts.lua")
+end
+
+function ENT:SpawnFunction(ply, tr, classname)
+	local ent = BaseClass.SpawnFunction(self, ply, tr, classname)
+
+	ent:SetPos(ent:GetPos() + Vector(0, 0, ent:GetGroundOffset()))
+
+	return ent
 end
 
 function ENT:Initialize()
