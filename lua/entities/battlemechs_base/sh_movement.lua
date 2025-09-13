@@ -86,19 +86,25 @@ if SERVER then
 		local data = self.MoveData
 		local vel = data.Velocity
 
-		local ang = self:GetAngles()
-		local accel = self:GetMoveAcceleration() * data.Delta
+		local acceleration = self:GetMoveAcceleration() * data.Delta
 		local target = self:GetDesiredVelocity()
 
 		local diff = target - vel
-		diff:Rotate(-ang)
+		local ratio = math.max(math.abs(diff.x), math.abs(diff.y))
 
-		diff.x = math.Clamp(diff.x, -accel, accel)
+		vel.x = math.Approach(vel.x, target.x, (diff.x / ratio) * acceleration)
+		vel.y = math.Approach(vel.y, target.y, (diff.y / ratio) * acceleration)
+	end
 
-		diff:Rotate(ang)
-		diff.z = 0
+	function ENT:ApplyFriction()
+		local data = self.MoveData
+		local vel = data.Velocity
 
-		vel:Add(diff)
+		local friction = math.max(vel:Length2D(), 10) * data.Delta * 10
+		local ratio = math.max(math.abs(vel.x), math.abs(vel.y))
+
+		vel.x = math.Approach(vel.x, 0, (math.abs(vel.x) / ratio) * friction)
+		vel.y = math.Approach(vel.y, 0, (math.abs(vel.y) / ratio) * friction)
 	end
 
 	function ENT:GetDesiredAngle()
@@ -144,7 +150,11 @@ if SERVER then
 		self:CheckGround()
 
 		if data.OnGround then
-			self:ApplyMoveInput()
+			if self:HasDriver() then
+				self:ApplyMoveInput()
+			else
+				self:ApplyFriction()
+			end
 		else
 			self:ApplyAirFriction()
 		end
@@ -153,7 +163,10 @@ if SERVER then
 			data.Yaw = self:GetDesiredAngle()
 		end
 
-		local turnAngle = -self:GetAngles() + Angle(0, data.Yaw, 0)
+		local ang = self:GetAngles()
+		local turnAngle = -ang + Angle(0, data.Yaw, 0)
+
+		data.Velocity:Rotate(turnAngle)
 
 		self:SetMechVelocity(data.Velocity)
 		self:SetOnGround(data.OnGround)
