@@ -109,11 +109,13 @@ end
 function ENT:SetupDataTables()
 	self:NetworkVar("Entity", "Seat")
 
-	self:NetworkVar("Bool", "OnGround")
 
+	-- Gait
 	self:NetworkVar("Float", "WalkCycle")
 	self:NetworkVar("Vector", "GaitOffset")
 
+	-- Movement
+	self:NetworkVar("Bool", "OnGround")
 	self:NetworkVar("Vector", "MechVelocity")
 
 	self:CreateNetworkVars()
