@@ -43,10 +43,25 @@ function ENT:UpdateGait()
 
 	local groundOffset = self:GetGroundOffset()
 
-	if not self:GetOnGround() then
+	if not self:IsActive() then
+		for _, leg in ipairs(self.Legs) do
+			local target, normal = self:FindGround(self:LocalToWorld(leg.Offset), leg.MaxLength)
+
+			leg.Ground = target
+			leg.Pos = target
+			leg.Target = target
+
+			leg.Normal = normal
+		end
+
+		self:SetGaitOffset(Vector())
+		self:SetWalkCycle(0)
+
+		return
+	elseif not self:GetOnGround() then
 		for _, leg in ipairs(self.Legs) do
 			leg.Pos = self:LocalToWorld(leg.Offset - Vector(0, 0, groundOffset * 0.75))
-			leg.Ground = nil
+			leg.Ground = self:FindGround(self:LocalToWorld(leg.Offset), leg.MaxLength)
 
 			leg.Normal = self:GetUp()
 		end
@@ -84,19 +99,8 @@ function ENT:UpdateGait()
 		end
 
 		local offset = self:LocalToWorld(leg.Offset)
-
-		if not leg.Ground then
-			local ground, normal = self:FindGround(offset, leg.MaxLength * 2)
-
-			leg.Ground = ground
-			leg.Pos = ground
-			leg.Target = ground
-
-			leg.OldNormal = normal
-			leg.Normal = normal
-		end
-
 		local target, normal = self:FindGround(offset + vel, leg.MaxLength * 1.5)
+
 		local distance = target:Distance(leg.Ground)
 		local hasTarget = distance > 5
 
@@ -193,8 +197,17 @@ function ENT:FindGround(offset, maxLength)
 	return result.HitPos, result.Hit and result.HitNormal or self:GetUp()
 end
 
-function ENT:AddLeg(data)
-	data.Moving = false
+function ENT:AddLeg(leg)
+	leg.Moving = false
 
-	table.insert(self.Legs, data)
+	local ground, normal = self:FindGround(self:LocalToWorld(leg.Offset), leg.MaxLength)
+
+	leg.Ground = ground
+	leg.Pos = ground
+	leg.Target = ground
+
+	leg.OldNormal = normal
+	leg.Normal = normal
+
+	table.insert(self.Legs, leg)
 end
