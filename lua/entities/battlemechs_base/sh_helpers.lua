@@ -65,3 +65,7 @@ function ENT:GetAimTrace()
 		maxs = Vector(4, 4, 4),
 	})
 end
+
+function ENT:IsActive()
+	return self:HasDriver()
+end
