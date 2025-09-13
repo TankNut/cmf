@@ -9,13 +9,16 @@ function ENT:BuildBones()
 end
 
 function ENT:UpdateRootBone(bone)
-	bone.Ang = self:GetAngles()
-
 	local offset = self:GetGaitOffset()
-	offset:Rotate(bone.Ang)
 
-	bone.Pos = self:GetPos()
-	bone.Pos:Add(offset)
+	local pos = self:GetPos()
+	local ang = self:GetAngles()
+
+	offset:Rotate(self:GetAngles())
+	pos:Add(offset)
+
+	bone.Pos = pos
+	bone.Ang = ang
 end
 
 function ENT:BuildLegs()

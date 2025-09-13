@@ -11,7 +11,7 @@ function ENT:BuildLegs()
 
 		Origin = Vector(0, spread, 0),
 		Offset = Vector(0, spread, 0),
-		MaxLength = self.UpperLength + self.LowerLength,
+		MaxLength = self.UpperLength + self.LowerLength + self.FootOffset,
 
 		Solver = self.IK_2Seg_Humanoid,
 		Chicken = true,
@@ -33,7 +33,7 @@ function ENT:BuildLegs()
 
 		Origin = Vector(0, -spread, 0),
 		Offset = Vector(0, -spread, 0),
-		MaxLength = self.UpperLength + self.LowerLength,
+		MaxLength = self.UpperLength + self.LowerLength + self.FootOffset,
 
 		Solver = self.IK_2Seg_Humanoid,
 		Chicken = true,
