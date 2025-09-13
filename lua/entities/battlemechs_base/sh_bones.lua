@@ -151,7 +151,7 @@ function ENT:UpdateTurret(bone)
 		if yawRate == 0 then
 			ang.y = relTargetAngle.y
 		else
-			ang.y = approachAngle(ang.y, relTargetAngle.y, pitchRate * delta, yawRange)
+			ang.y = approachAngle(ang.y, relTargetAngle.y, yawRate * delta, yawRange)
 		end
 
 		self["Set" .. config.NetworkVar](self, ang)
