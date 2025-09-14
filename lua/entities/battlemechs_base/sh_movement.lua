@@ -149,8 +149,10 @@ if SERVER then
 
 		self:CheckGround()
 
+		local allowMovement = self:ShouldAllowMovement()
+
 		if data.OnGround then
-			if self:HasDriver() then
+			if allowMovement then
 				self:ApplyMoveInput()
 			else
 				self:ApplyFriction()
@@ -159,7 +161,7 @@ if SERVER then
 			self:ApplyAirFriction()
 		end
 
-		if data.HasDriver then
+		if allowMovement then
 			data.Yaw = self:GetDesiredAngle()
 		end
 
@@ -175,5 +177,7 @@ if SERVER then
 
 		phys:SetVelocity(data.Velocity)
 		phys:SetAngleVelocity(Vector(turnAngle.r * 10, turnAngle.p * 10, turnAngle.y / data.Delta))
+
+		print(self.MoveData.Velocity:Length2D())
 	end
 end

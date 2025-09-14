@@ -66,6 +66,21 @@ function ENT:GetAimTrace()
 	})
 end
 
+function ENT:ShouldLockTorso()
+	local ply = self:GetDriver()
+
+	return IsValid(ply) and ply:KeyDown(IN_WALK)
+end
+
 function ENT:IsActive()
 	return self:HasDriver()
+end
+
+function ENT:ShouldAllowMovement()
+	return self:HasDriver() and self:CallStateVar("AllowMovement")
+end
+
+
+function ENT:GetPowerState()
+	return self:CallStateVar("PowerState") or 1
 end

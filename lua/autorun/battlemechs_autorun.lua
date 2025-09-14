@@ -26,6 +26,15 @@ function battlemechs:SimpleBone(parent, pos, ang)
 	}
 end
 
+battlemechs.STATE_OFFLINE   = 0
+battlemechs.STATE_ONLINE    = 1
+battlemechs.STATE_POWERDOWN = 2
+battlemechs.STATE_POWERUP   = 3
+battlemechs.STATE_CRITICAL  = 4
+
+battlemechs:Hook("PlayerButtonDown")
+battlemechs:Hook("PlayerButtonUp")
+
 if CLIENT then
 	function battlemechs:HookLocal(name)
 		hook.Add(name, "battlemechs", function(...)

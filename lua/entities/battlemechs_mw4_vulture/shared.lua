@@ -78,10 +78,10 @@ function ENT:UpdateRootBone(bone)
 	local pos = self:GetPos()
 	local ang = self:GetAngles()
 
-	if not self:IsActive() then
-		ang:Add(Angle(40, 0, -10))
-		offset:Add(Vector(-20, 0, 0))
-	end
+	local power = 1 - self:GetPowerState()
+
+	ang:Add(Angle(40, 0, -10) * power)
+	offset:Add(Vector(-20, 0, 0) * power)
 
 	offset:Rotate(self:GetAngles())
 	pos:Add(offset)
