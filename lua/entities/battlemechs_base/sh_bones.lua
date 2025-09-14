@@ -79,6 +79,25 @@ local function approachAngle(from, to, delta, range)
 	return math.Approach(from, from + diff, delta)
 end
 
+function ENT:GetTurretAngle(bone, config, ang, forwardAngle)
+	if config.Callback then
+		return config.Callback(self, bone)
+	else
+		if self:ShouldAllowMovement() then
+			if config.Torso and self:ShouldLockTorso() then
+				return ang + forwardAngle
+			else
+				local target = (self.BoneTrace.HitPos - bone.Pos):Angle()
+				target:Normalize()
+
+				return target
+			end
+		else
+			return forwardAngle
+		end
+	end
+end
+
 function ENT:UpdateTurret(bone)
 	local parent = self:GetBone(bone.Parent)
 	local config = bone.Turret
@@ -93,24 +112,7 @@ function ENT:UpdateTurret(bone)
 	end
 
 	if not config.Slave then
-		local targetAngle
-
-		if config.Callback then
-			targetAngle = config.Callback(self, bone)
-		else
-			local ply = self:GetDriver()
-
-			if IsValid(ply) then
-				if config.Torso and ply:KeyDown(IN_WALK) then
-					targetAngle = ang + forwardAngle
-				else
-					targetAngle = (self.BoneTrace.HitPos - bone.Pos):Angle()
-					targetAngle:Normalize()
-				end
-			else
-				targetAngle = self.Bones.Root.Ang
-			end
-		end
+		local targetAngle = self:GetTurretAngle(bone, config, ang, forwardAngle)
 
 		-- Turn range
 		local pitchRange = config.Pitch
