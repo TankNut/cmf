@@ -9,8 +9,6 @@ function battlemechs:GetMech(ply)
 	return ply:GetNWEntity("battlemechs.mech")
 end
 
-
-
 function battlemechs:SimpleBone(parent, pos, ang)
 	return {
 		Parent = parent,

@@ -49,6 +49,8 @@ ENT.ThirdPersonSettings = {
 -- Misc fields
 ENT.DrawRadius = 200 -- The radius that's added on top of ENT.Hull to determine the mech's render bounds
 
+-- Custom fields
+
 ENT.UpperLength = 60
 ENT.LowerLength = 68
 

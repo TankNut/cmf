@@ -44,18 +44,26 @@ ENT.UpStep = {2, 1} -- [MoveStat] The amount of upwards offset that's applied to
 -- Camera
 ENT.FirstPersonSettings = {
 	Bone = nil,
-	Pos = Vector(0, 0, 0)
-}
-
-ENT.ThirdPersonSettings = {
-	Distance = 400,
-	Pos = Vector(0, 0, 100),
+	Pos = Vector(),
 
 	HideParts = true
 }
 
+ENT.ThirdPersonSettings = {
+	Distance = 400,
+	Pos = Vector(0, 0, 100)
+}
+
 -- Misc fields
 ENT.DrawRadius = 200 -- The radius that's added on top of ENT.Hull to determine the mech's render bounds
+
+ENT.DrawDriver = {
+	Enabled = false,
+	Bone = nil,
+
+	Pos = Vector(),
+	Ang = Angle()
+}
 
 include("sh_bones.lua")
 include("sh_gait.lua")
@@ -66,17 +74,16 @@ include("sh_input.lua")
 include("sh_movement.lua")
 include("sh_physics.lua")
 include("sh_states.lua")
+include("sh_view.lua")
 
 include("sh_blueprint.lua")
 
 AddCSLuaFile("cl_debug.lua")
 AddCSLuaFile("cl_parts.lua")
-AddCSLuaFile("cl_view.lua")
 
 if CLIENT then
 	include("cl_debug.lua")
 	include("cl_parts.lua")
-	include("cl_view.lua")
 end
 
 ENT.States = {}
@@ -256,10 +263,36 @@ function ENT:OnReloaded()
 end
 
 if CLIENT then
-
 	function ENT:PrePlayerDraw(ply, flags)
-		--ply:SetPos(self:LocalToWorld(Vector(0, 0, -50)))
-		return true
+		local config = self.DrawDriver
+
+		if not config.Enabled then
+			return true
+		end
+
+		local pos = config.Pos
+		local ang = config.Ang
+
+		if config.Bone then
+			self:UpdateBones()
+
+			local bone = self.Bones[config.Bone]
+
+			pos, ang = LocalToWorld(pos, ang, bone.Pos, bone.Ang)
+		else
+			pos, ang = LocalToWorld(pos, ang, self:GetPos(), self:GetAngles())
+		end
+
+		ply:SetPos(pos)
+		ply:SetRenderAngles(ang)
+
+		ply:SetPoseParameter("aim_pitch", 0)
+		ply:SetPoseParameter("aim_yaw", 0)
+
+		ply:SetPoseParameter("head_pitch", 0)
+		ply:SetPoseParameter("head_yaw", 0)
+
+		ply:InvalidateBoneCache()
 	end
 
 	function ENT:PostPlayerDraw(ply, flags)

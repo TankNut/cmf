@@ -1,3 +1,15 @@
+AddCSLuaFile()
+
+if SERVER then
+	function ENT:SetThirdPersonMode(ply)
+		local mode = tobool(ply:GetInfoNum("battlemechs_thirdperson", 1))
+
+		self.Seat:SetThirdPersonMode(mode)
+	end
+
+	return
+end
+
 function ENT:UpdateThirdPerson()
 	local ply = self:GetDriver()
 
@@ -10,12 +22,6 @@ function ENT:UpdateThirdPerson()
 	if mode != ply:GetInfoNum("battlemechs_thirdperson", 1) then
 		RunConsoleCommand("battlemechs_thirdperson", mode)
 	end
-end
-
-function ENT:SetThirdPersonMode(ply)
-	local mode = tobool(ply:GetInfoNum("battlemechs_thirdperson", 1))
-
-	self.Seat:SetThirdPersonMode(mode)
 end
 
 function ENT:CalcView(ply, origin, angles, fov, znear, zfar)
@@ -33,6 +39,6 @@ function ENT:CalcView(ply, origin, angles, fov, znear, zfar)
 		fov = fov,
 		znear = znear,
 		zfar = zfar,
-		drawviewer = thirdperson
+		drawviewer = self:GetSeat():GetThirdPersonMode()
 	}
 end
