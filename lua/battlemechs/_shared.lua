@@ -1,0 +1,66 @@
+AddCSLuaFile()
+
+battlemechs = battlemechs or {}
+
+include("sh_convars.lua")
+include("sh_hooks.lua")
+
+function battlemechs:GetMech(ply)
+	return ply:GetNWEntity("battlemechs.mech")
+end
+
+
+
+function battlemechs:SimpleBone(parent, pos, ang)
+	return {
+		Parent = parent,
+		Offset = {
+			Pos = pos,
+			Ang = ang
+		}
+	}
+end
+
+battlemechs.STATE_OFFLINE   = 0
+battlemechs.STATE_ONLINE    = 1
+battlemechs.STATE_POWERDOWN = 2
+battlemechs.STATE_POWERUP   = 3
+battlemechs.STATE_CRITICAL  = 4
+
+if CLIENT then
+	function battlemechs:DrawWorldText(pos, text, noz)
+		local screen = pos:ToScreen()
+
+		if not screen.visible then
+			return
+		end
+
+		cam.IgnoreZ(true)
+		cam.Start2D()
+			surface.SetFont("BudgetLabel")
+
+			local w, h = surface.GetTextSize("BudgetLabel", text)
+
+			surface.SetTextColor(255, 255, 255, 255)
+			surface.SetTextPos(screen.x - w * 0.5, screen.y - h * 0.5)
+
+			surface.DrawText(text)
+		cam.End2D()
+		cam.IgnoreZ(false)
+	end
+
+	battlemechs.MODEL = 1
+
+	function battlemechs:ModelPart(mdl, bone, data)
+		data = data or {}
+
+		data.Type = self.MODEL
+		data.Model = Model(mdl)
+		data.Bone = bone
+
+		data.Pos = data.Pos or Vector()
+		data.Ang = data.Ang or Angle()
+
+		return data
+	end
+end

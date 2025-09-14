@@ -177,13 +177,24 @@ if SERVER then
 			return
 		end
 
+		ply:EnterVehicle(self.Seat)
+
+	end
+
+	function ENT:OnEnter(ply)
 		local dir = self:GetForward()
 
 		dir.z = 0
 		dir:Normalize()
 
-		ply:EnterVehicle(self.Seat)
 		ply:SetEyeAngles(dir:Angle())
+
+		local thirdperson = tobool(ply:GetInfoNum("battlemechs_thirdperson", 1))
+
+		self.Seat:SetThirdPersonMode(thirdperson)
+	end
+
+	function ENT:OnExit(ply)
 	end
 end
 
