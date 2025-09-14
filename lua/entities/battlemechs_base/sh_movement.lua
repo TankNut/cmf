@@ -177,7 +177,5 @@ if SERVER then
 
 		phys:SetVelocity(data.Velocity)
 		phys:SetAngleVelocity(Vector(turnAngle.r * 10, turnAngle.p * 10, turnAngle.y / data.Delta))
-
-		print(self.MoveData.Velocity:Length2D())
 	end
 end
