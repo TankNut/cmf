@@ -28,16 +28,6 @@ local function drawBox(pos, ang, mins, maxs, color)
 	color.a = oldAlpha
 end
 
-function ENT:DrawDebug()
-	for index, name in ipairs(methods) do
-		local convar = convars[index]
-
-		if convar:GetBool() and self["Debug" .. name] then
-			self["Debug" .. name](self)
-		end
-	end
-end
-
 function ENT:DebugPhysics()
 	drawBox(self:GetPos(), self:GetAngles(), self.Hull.Mins, self.Hull.Maxs, physicsColor)
 end
@@ -131,4 +121,24 @@ function ENT:DebugTurrets()
 			render.DrawLine(bone.Pos, bone.Pos + ang:Forward() * 56756, forward, true)
 		end
 	end
+end
+
+function ENT:DrawDebug()
+	for index, name in ipairs(methods) do
+		local convar = convars[index]
+
+		if convar:GetBool() and self["Debug" .. name] then
+			self["Debug" .. name](self)
+		end
+	end
+end
+
+function ENT:PreDrawHUD()
+	if self:IsDormant() then
+		return
+	end
+
+	cam.Start3D()
+		self:DrawDebug()
+	cam.End3D()
 end

@@ -71,10 +71,12 @@ include("sh_blueprint.lua")
 
 AddCSLuaFile("cl_debug.lua")
 AddCSLuaFile("cl_parts.lua")
+AddCSLuaFile("cl_view.lua")
 
 if CLIENT then
 	include("cl_debug.lua")
 	include("cl_parts.lua")
+	include("cl_view.lua")
 end
 
 ENT.States = {}
@@ -143,6 +145,10 @@ function ENT:Think()
 	self:UpdateLegs()
 	self:UpdateHitboxes()
 
+	if CLIENT then
+		self:UpdateThirdPerson()
+	end
+
 	self:NextThink(CurTime())
 
 	return true
@@ -189,9 +195,7 @@ if SERVER then
 
 		ply:SetEyeAngles(dir:Angle())
 
-		local thirdperson = tobool(ply:GetInfoNum("battlemechs_thirdperson", 1))
-
-		self.Seat:SetThirdPersonMode(thirdperson)
+		self:SetThirdPersonMode(ply)
 	end
 
 	function ENT:OnExit(ply)
@@ -252,6 +256,7 @@ function ENT:OnReloaded()
 end
 
 if CLIENT then
+
 	function ENT:PrePlayerDraw(ply, flags)
 		--ply:SetPos(self:LocalToWorld(Vector(0, 0, -50)))
 		return true
@@ -260,40 +265,11 @@ if CLIENT then
 	function ENT:PostPlayerDraw(ply, flags)
 	end
 
-	function ENT:CalcView(ply, origin, angles, fov, znear, zfar)
-		if ply:GetViewEntity() != ply then
-			return
-		end
-
-		self:UpdateBones()
-
-		origin, angles = self:GetViewOrigin()
-
-		return {
-			origin = origin,
-			angles = angles,
-			fov = fov,
-			znear = znear,
-			zfar = zfar,
-			drawviewer = thirdperson
-		}
-	end
-
 	function ENT:Draw(flags)
 		self:DrawParts(flags, RENDERGROUP_OPAQUE)
 	end
 
 	function ENT:DrawTranslucent(flags)
 		self:DrawParts(flags, RENDERGROUP_TRANSLUCENT)
-	end
-
-	function ENT:PreDrawHUD()
-		if self:IsDormant() then
-			return
-		end
-
-		cam.Start3D()
-			self:DrawDebug()
-		cam.End3D()
 	end
 end
