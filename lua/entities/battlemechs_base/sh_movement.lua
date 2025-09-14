@@ -166,7 +166,9 @@ if SERVER then
 		local ang = self:GetAngles()
 		local turnAngle = -ang + Angle(0, data.Yaw, 0)
 
-		data.Velocity:Rotate(turnAngle)
+		if data.OnGround then
+			data.Velocity:Rotate(turnAngle)
+		end
 
 		self:SetMechVelocity(data.Velocity)
 		self:SetOnGround(data.OnGround)
