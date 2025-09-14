@@ -24,6 +24,8 @@ end
 
 function ENT:UpdateGait()
 	local delta = CurTime() - self.LastGait
+	self.LastGait = CurTime()
+
 	local vel = self:GetMechVelocity()
 
 	local length = self:GetMoveStat(self.Stance)
@@ -36,14 +38,14 @@ function ENT:UpdateGait()
 
 	vel:Div(self:GetMoveStat(self.ForwardLean))
 
-	local cycle = self:GetWalkCycle() + delta
+	local oldCycle = self:GetWalkCycle()
+	local cycle = oldCycle + delta
 
 	self:SetWalkCycle(cycle % 1)
-	self.LastGait = CurTime()
 
 	local groundOffset = self:GetGroundOffset()
 
-	if not self:IsActive() then
+	if self:GetPowerState() == 0 and (oldCycle == 0 or cycle > 1) then
 		for _, leg in ipairs(self.Legs) do
 			local target, normal = self:FindGround(self:LocalToWorld(leg.Offset), leg.MaxLength)
 

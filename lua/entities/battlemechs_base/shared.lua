@@ -58,10 +58,10 @@ ENT.ThirdPersonSettings = {
 ENT.DrawRadius = 200 -- The radius that's added on top of ENT.Hull to determine the mech's render bounds
 
 include("sh_bones.lua")
+include("sh_gait.lua")
 include("sh_helpers.lua")
 include("sh_hitboxes.lua")
 include("sh_ik.lua")
-include("sh_legs.lua")
 include("sh_movement.lua")
 include("sh_physics.lua")
 
