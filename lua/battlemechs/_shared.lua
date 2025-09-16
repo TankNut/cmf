@@ -19,6 +19,10 @@ function battlemechs:SimpleBone(parent, pos, ang)
 	}
 end
 
+function battlemechs:MW4Scale(x, y, z)
+	return Vector(x * 25, y * 25, z * 25)
+end
+
 battlemechs.STATE_OFFLINE   = 0
 battlemechs.STATE_ONLINE    = 1
 battlemechs.STATE_POWERDOWN = 2
