@@ -23,7 +23,6 @@ function ENT:CreatePartEntity(part)
 	ent:SetSkin(part.Skin or 0)
 	ent:SetNoDraw(true)
 
-	part.RenderGroup = ent:GetRenderGroup()
 	part.Entity = ent
 end
 
@@ -33,7 +32,7 @@ function ENT:DrawParts(flags, renderGroup)
 	end
 
 	for _, part in ipairs(self.Parts) do
-		if part.RenderGroup == RENDERGROUP_BOTH or part.RenderGroup == renderGroup then
+		if not part.RenderGroup or part.RenderGroup == renderGroup then
 			self:DrawPart(part, flags)
 		end
 	end
