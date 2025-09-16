@@ -1,0 +1,6 @@
+VertexLitGeneric
+{
+	$basetexture "models/battlemechs/mw4/atlas/skin19"
+	
+	$halflambert 1
+}
