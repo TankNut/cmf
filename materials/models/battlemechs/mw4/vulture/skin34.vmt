@@ -3,4 +3,5 @@ VertexLitGeneric
 	$basetexture "models/battlemechs/mw4/vulture/skin34"
 	
 	$halflambert 1
+	$nocull 1
 }
