@@ -1,5 +1,6 @@
-"VertexLitGeneric"
+VertexLitGeneric
 {
-	"$basetexture" "models/battlemechs/mw4/vulture/skin19"
-	"$halflambert" 1
+	$basetexture "models/battlemechs/mw4/vulture/skin19"
+	
+	$halflambert 1
 }
