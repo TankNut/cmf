@@ -76,7 +76,7 @@ include("sh_physics.lua")
 include("sh_states.lua")
 include("sh_view.lua")
 
-include("sh_blueprint.lua")
+include("sh_interface.lua")
 
 AddCSLuaFile("cl_debug.lua")
 AddCSLuaFile("cl_parts.lua")

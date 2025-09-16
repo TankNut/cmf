@@ -1,7 +1,5 @@
 AddCSLuaFile()
 
--- Functions that are designed to be overwritten
-
 function ENT:CreateNetworkVars()
 end
 
