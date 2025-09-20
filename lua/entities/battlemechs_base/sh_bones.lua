@@ -79,6 +79,10 @@ local function approachAngle(from, to, delta, range)
 	return math.Approach(from, from + diff, delta)
 end
 
+function ENT:GetFallbackTurretAngle(bone, config, ang, forwardAngle)
+	return nil -- Don't update
+end
+
 function ENT:GetTurretAngle(bone, config, ang, forwardAngle)
 	if config.Callback then
 		return config.Callback(self, bone)
@@ -93,7 +97,7 @@ function ENT:GetTurretAngle(bone, config, ang, forwardAngle)
 				return target
 			end
 		else
-			return forwardAngle
+			return self:GetFallbackTurretAngle(bone, config, ang, forwardAngle)
 		end
 	end
 end
@@ -114,49 +118,51 @@ function ENT:UpdateTurret(bone)
 	if not config.Slave then
 		local targetAngle = self:GetTurretAngle(bone, config, ang, forwardAngle)
 
-		-- Turn range
-		local pitchRange = config.Pitch
-		local yawRange = config.Yaw
+		if targetAngle then
+			-- Turn range
+			local pitchRange = config.Pitch
+			local yawRange = config.Yaw
 
-		local relTargetAngle = targetAngle - forwardAngle
+			local relTargetAngle = targetAngle - forwardAngle
 
-		if istable(pitchRange) then
-			relTargetAngle.p = math.Clamp(math.NormalizeAngle(relTargetAngle.p), pitchRange[1], pitchRange[2])
-		elseif isnumber(pitchRange) then
-			relTargetAngle.p = pitchRange
+			if istable(pitchRange) then
+				relTargetAngle.p = math.Clamp(math.NormalizeAngle(relTargetAngle.p), pitchRange[1], pitchRange[2])
+			elseif isnumber(pitchRange) then
+				relTargetAngle.p = pitchRange
+			end
+
+			if istable(yawRange) then
+				relTargetAngle.y = math.Clamp(math.NormalizeAngle(relTargetAngle.y), yawRange[1], yawRange[2])
+			elseif isnumber(yawRange) then
+				relTargetAngle.y = yawRange
+			end
+
+			-- Turn rate
+			local rate = config.Rate or 0
+			local pitchRate, yawRate
+
+			if isangle(config.Rate) then
+				pitchRate, yawRate = rate.p, rate.y
+			else
+				pitchRate, yawRate = rate, rate
+			end
+
+			local delta = self.BoneDelta
+
+			if pitchRate == 0 then
+				ang.p = relTargetAngle.p
+			else
+				ang.p = approachAngle(ang.p, relTargetAngle.p, pitchRate * delta, pitchRange)
+			end
+
+			if yawRate == 0 then
+				ang.y = relTargetAngle.y
+			else
+				ang.y = approachAngle(ang.y, relTargetAngle.y, yawRate * delta, yawRange)
+			end
+
+			self["Set" .. config.NetworkVar](self, ang)
 		end
-
-		if istable(yawRange) then
-			relTargetAngle.y = math.Clamp(math.NormalizeAngle(relTargetAngle.y), yawRange[1], yawRange[2])
-		elseif isnumber(yawRange) then
-			relTargetAngle.y = yawRange
-		end
-
-		-- Turn rate
-		local rate = config.Rate or 0
-		local pitchRate, yawRate
-
-		if isangle(config.Rate) then
-			pitchRate, yawRate = rate.p, rate.y
-		else
-			pitchRate, yawRate = rate, rate
-		end
-
-		local delta = self.BoneDelta
-
-		if pitchRate == 0 then
-			ang.p = relTargetAngle.p
-		else
-			ang.p = approachAngle(ang.p, relTargetAngle.p, pitchRate * delta, pitchRange)
-		end
-
-		if yawRate == 0 then
-			ang.y = relTargetAngle.y
-		else
-			ang.y = approachAngle(ang.y, relTargetAngle.y, yawRate * delta, yawRange)
-		end
-
-		self["Set" .. config.NetworkVar](self, ang)
 	end
 
 	if config.NoPitch then
@@ -167,7 +173,7 @@ function ENT:UpdateTurret(bone)
 		ang.y = 0
 	end
 
-	bone.Ang = ang + forwardAngle
+	_, bone.Ang = LocalToWorld(vector_origin, ang, bone.Pos, forwardAngle)
 end
 
 function ENT:UpdateBones()
