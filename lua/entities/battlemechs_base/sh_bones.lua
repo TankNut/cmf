@@ -83,7 +83,7 @@ function ENT:GetTurretAngle(bone, config, ang, forwardAngle)
 	if config.Callback then
 		return config.Callback(self, bone)
 	else
-		if self:ShouldAllowMovement() then
+		if self:CanAim(bone, config) then
 			if config.Torso and self:ShouldLockTorso() then
 				return ang + forwardAngle
 			else

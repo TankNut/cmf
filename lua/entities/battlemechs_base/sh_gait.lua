@@ -45,18 +45,27 @@ function ENT:UpdateGait()
 
 	local groundOffset = self:GetGroundOffset()
 
-	if self:GetPowerState() == 0 and (oldCycle == 0 or cycle > 1) then
+	local gaitOffset = Vector()
+	local sideStep = self:GetMoveStat(self.SideStep)
+	local upStep = self:GetMoveStat(self.UpStep)
+
+	if not self:CanMove() and (oldCycle == 0 or cycle > 1) then
 		for _, leg in ipairs(self.Legs) do
-			local target, normal = self:FindGround(self:LocalToWorld(leg.Offset), leg.MaxLength)
+			local offset = self:LocalToWorld(leg.Offset)
+			local target, normal = self:FindGround(offset, leg.MaxLength)
 
 			leg.Ground = target
 			leg.Pos = target
 			leg.Target = target
 
 			leg.Normal = normal
+
+			local z = -(target:Distance(offset) - groundOffset) / upStep
+
+			gaitOffset.z = gaitOffset.z + z
 		end
 
-		self:SetGaitOffset(Vector())
+		self:SetGaitOffset(gaitOffset / #self.Legs)
 		self:SetWalkCycle(0)
 
 		return
@@ -73,10 +82,6 @@ function ENT:UpdateGait()
 
 		return
 	end
-
-	local gaitOffset = Vector()
-	local sideStep = self:GetMoveStat(self.SideStep)
-	local upStep = self:GetMoveStat(self.UpStep)
 
 	for k, leg in ipairs(self.Legs) do
 		local gaitStart = leg.Timing

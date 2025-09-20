@@ -149,10 +149,10 @@ if SERVER then
 
 		self:CheckGround()
 
-		local allowMovement = self:ShouldAllowMovement()
+		local canMove = self:CanMove()
 
 		if data.OnGround then
-			if allowMovement then
+			if canMove then
 				self:ApplyMoveInput()
 			else
 				self:ApplyFriction()
@@ -161,7 +161,7 @@ if SERVER then
 			self:ApplyAirFriction()
 		end
 
-		if allowMovement then
+		if canMove then
 			data.Yaw = self:GetDesiredAngle()
 		end
 

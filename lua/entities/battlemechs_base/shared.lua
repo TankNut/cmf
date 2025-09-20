@@ -70,10 +70,8 @@ include("sh_gait.lua")
 include("sh_helpers.lua")
 include("sh_hitboxes.lua")
 include("sh_ik.lua")
-include("sh_input.lua")
 include("sh_movement.lua")
 include("sh_physics.lua")
-include("sh_states.lua")
 include("sh_view.lua")
 
 include("sh_interface.lua")
@@ -85,13 +83,6 @@ if CLIENT then
 	include("cl_debug.lua")
 	include("cl_parts.lua")
 end
-
-ENT.States = {}
-
-include("states/state_offline.lua")
-include("states/state_online.lua")
-include("states/state_powerdown.lua")
-include("states/state_powerup.lua")
 
 function ENT:SpawnFunction(ply, tr, classname)
 	local ent = BaseClass.SpawnFunction(self, ply, tr, classname)
@@ -127,11 +118,6 @@ end
 function ENT:SetupDataTables()
 	self:NetworkVar("Entity", "Seat")
 
-	-- State
-	self:NetworkVar("Int", "ActiveState")
-	self:NetworkVar("Float", "StateSwitchTime")
-	self:NetworkVar("Float", "StateTimer")
-
 	-- Gait
 	self:NetworkVar("Float", "WalkCycle")
 	self:NetworkVar("Vector", "GaitOffset")
@@ -145,8 +131,6 @@ end
 
 function ENT:Think()
 	self:PhysWake()
-
-	self:UpdateState()
 
 	self:UpdateBones()
 	self:UpdateLegs()

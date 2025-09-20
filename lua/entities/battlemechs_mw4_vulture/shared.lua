@@ -73,21 +73,3 @@ function ENT:CreateNetworkVars()
 	self:NetworkVar("Angle", "LeftWeaponAngle")
 	self:NetworkVar("Angle", "RightWeaponAngle")
 end
-
-function ENT:UpdateRootBone(bone)
-	local offset = self:GetGaitOffset()
-
-	local pos = self:GetPos()
-	local ang = self:GetAngles()
-
-	local power = 1 - self:GetPowerState()
-
-	ang:Add(Angle(40, 0, -10) * power)
-	offset:Add(Vector(-20, 0, 0) * power)
-
-	offset:Rotate(self:GetAngles())
-	pos:Add(offset)
-
-	bone.Pos = pos
-	bone.Ang = ang
-end

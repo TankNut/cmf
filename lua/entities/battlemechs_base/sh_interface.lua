@@ -22,9 +22,7 @@ end
 function ENT:BuildLegs()
 end
 
-function ENT:OnStepStart(index, leg)
-end
-
+function ENT:OnStepStart(index, leg) end
 function ENT:OnStepFinish(index, leg)
 	if SERVER then
 		sound.Play(")sfx_footfall_generic.wav", leg.Pos, 100, math.Rand(95, 105))
