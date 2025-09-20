@@ -7,8 +7,8 @@ function ENT:BuildLegs()
 		RootBone = self.Bones.Root,
 		Rotation = Angle(0, 0, 0),
 
-		Origin = Vector(0, 35, 0),
-		Offset = Vector(0, 25, 0),
+		Origin = battlemechs:MW4Scale(0, 1.45, 0),
+		Offset = battlemechs:MW4Scale(0, 1, 0),
 		MaxLength = self.UpperLength + self.LowerLength,
 
 		Solver = self.IK_2Seg_Humanoid,
@@ -29,8 +29,8 @@ function ENT:BuildLegs()
 		RootBone = self.Bones.Root,
 		Rotation = Angle(0, 0, 0),
 
-		Origin = Vector(0, -35, 0),
-		Offset = Vector(0, -25, 0),
+		Origin = battlemechs:MW4Scale(0, -1.45, 0),
+		Offset = battlemechs:MW4Scale(0, -1, 0),
 		MaxLength = self.UpperLength + self.LowerLength,
 
 		Solver = self.IK_2Seg_Humanoid,

@@ -1,7 +1,0 @@
-"VertexlitGeneric"
-{
-	"$basetexture" "models/mw4addon/owens_tex"
-	"$surfaceprop" "metalvehicle"
-	"$model" 1
-	"$halflambert" 1
-}

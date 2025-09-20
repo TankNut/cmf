@@ -5,7 +5,7 @@ function ENT:BuildBones()
 	self:AddBone("Torso", {
 		Parent = "Root",
 		Offset = {
-			Pos = Vector(0, 0, 17)
+			Pos = battlemechs:MW4Scale(-0.22, 0, 0.67)
 		},
 		Turret = {
 			NetworkVar = "TorsoAngle",
@@ -13,20 +13,34 @@ function ENT:BuildBones()
 			Yaw = {-130, 130},
 			Rate = 225,
 
-			NoPitch = true
+			NoPitch = true,
+			Torso = true
 		}
 	})
 
-	self:AddBone("Weapons", {
+	self:AddBone("LeftWeapon", {
 		Parent = "Torso",
 		Offset = {
-			Pos = Vector(2, 0, 13)
+			Pos = battlemechs:MW4Scale(0.17, 2, 0.51)
 		},
 		Turret = {
-			NetworkVar = "TorsoAngle",
-			Slave = true,
+			NetworkVar = "LeftWeaponAngle",
+			Pitch = {-90, 90},
+			Yaw = {-15, 30},
+			Rate = 108,
+		}
+	})
 
-			NoYaw = true
+	self:AddBone("RightWeapon", {
+		Parent = "Torso",
+		Offset = {
+			Pos = battlemechs:MW4Scale(0.17, -2, 0.51)
+		},
+		Turret = {
+			NetworkVar = "RightWeaponAngle",
+			Pitch = {-90, 90},
+			Yaw = {-30, 15},
+			Rate = 108
 		}
 	})
 
