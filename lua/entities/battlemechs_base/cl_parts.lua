@@ -27,6 +27,8 @@ function ENT:CreatePartEntity(part)
 	ent:SetNoDraw(true)
 
 	part.Entity = ent
+
+	return ent
 end
 
 function ENT:DrawParts(flags, renderGroup)
@@ -42,11 +44,11 @@ function ENT:DrawParts(flags, renderGroup)
 end
 
 function ENT:DrawModelPart(part, flags)
-	if not IsValid(part.Entity) then
-		self:CreatePartEntity(part)
-	end
-
 	local ent = part.Entity
+
+	if not IsValid(ent) then
+		ent = self:CreatePartEntity(part)
+	end
 
 	self:UpdateModelPart(ent, part)
 

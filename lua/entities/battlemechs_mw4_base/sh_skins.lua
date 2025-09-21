@@ -5,9 +5,12 @@ local i = 0
 local function addSkin(category, name)
 	local tab = {
 		Name = name,
-		Category = category,
-		Material = i == 0 and "default" or "skin" .. i
+		Category = category
 	}
+
+	if i > 0 then
+		tab.Material = "skin" .. i
+	end
 
 	i = i + 1
 
@@ -94,11 +97,16 @@ if CLIENT then
 		local target = self:GetSkinIndex()
 
 		if index != target then
+			local skinData = self.Skins[target + 1]
+
 			if target == 0 then
 				ent:SetMaterial("")
 			else
 				local family = string.match(ent:GetModel(), "^models/battlemechs/mw4/(%a+)/")
-				ent:SetMaterial(string.format("models/battlemechs/mw4/%s/skin%s", family, target))
+
+				if family then
+					ent:SetMaterial(string.format("models/battlemechs/mw4/%s/%s", family, skinData.Material))
+				end
 			end
 
 			ent.SkinIndex = target
