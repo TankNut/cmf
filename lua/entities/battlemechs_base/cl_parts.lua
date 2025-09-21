@@ -4,7 +4,10 @@ function ENT:InitParts()
 	end
 
 	self.Parts = {}
-	self:BuildModel()
+
+	for _, v in ipairs(self.ModelData) do
+		self:AddPart(v)
+	end
 end
 
 function ENT:AddPart(data)

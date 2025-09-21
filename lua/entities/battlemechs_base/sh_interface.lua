@@ -29,13 +29,7 @@ function ENT:OnStepFinish(index, leg)
 	end
 end
 
-if CLIENT then
-	function ENT:BuildModel()
-		for _, v in ipairs(self.ModelData) do
-			self:AddPart(v)
-		end
-	end
-else
+if SERVER then
 	function ENT:BuildHitboxes()
 	end
 end
