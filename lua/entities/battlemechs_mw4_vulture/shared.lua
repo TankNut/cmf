@@ -1,6 +1,6 @@
 AddCSLuaFile()
 
-ENT.Base = "battlemechs_base"
+ENT.Base = "battlemechs_mw4_base"
 
 ENT.PrintName = "Vulture"
 ENT.Category = "Battlemechs: MW4"
