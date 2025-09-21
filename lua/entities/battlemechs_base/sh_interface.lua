@@ -29,7 +29,10 @@ function ENT:OnStepFinish(index, leg)
 	end
 end
 
-if SERVER then
+if CLIENT then
+	function ENT:UpdateModelPart(ent, part)
+	end
+else
 	function ENT:BuildHitboxes()
 	end
 end

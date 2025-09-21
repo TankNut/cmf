@@ -46,14 +46,16 @@ function ENT:DrawModelPart(part, flags)
 		self:CreatePartEntity(part)
 	end
 
+	local ent = part.Entity
+
+	self:UpdateModelPart(ent, part)
+
 	local pos, ang = LocalToWorld(part.Pos, part.Ang, self.Bones[part.Bone].Pos, self.Bones[part.Bone].Ang)
 
 	-- NaN check
 	if pos.x != pos.x then
 		return
 	end
-
-	local ent = part.Entity
 
 	ent:SetPos(pos)
 	ent:SetAngles(ang)
