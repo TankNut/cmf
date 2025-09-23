@@ -55,6 +55,8 @@ ENT.ThirdPersonSettings = {
 }
 
 -- Misc fields
+ENT.BaseHealth = 6000
+
 ENT.DrawRadius = 200 -- The radius that's added on top of ENT.Hull to determine the mech's render bounds
 ENT.FootstepSound = "MW4.Footstep.Small"
 
@@ -67,6 +69,7 @@ ENT.DrawDriver = {
 }
 
 include("sh_bones.lua")
+include("sh_damage.lua")
 include("sh_gait.lua")
 include("sh_helpers.lua")
 include("sh_hitboxes.lua")
@@ -126,6 +129,8 @@ function ENT:SetupDataTables()
 	-- Movement
 	self:NetworkVar("Bool", "OnGround")
 	self:NetworkVar("Vector", "MechVelocity")
+
+	self:InitDamageGroups()
 
 	self:CreateNetworkVars()
 end
@@ -191,6 +196,19 @@ if SERVER then
 	end
 
 	function ENT:OnExit(ply)
+		local mins, maxs = ply:GetHull()
+
+		local tr = util.TraceHull({
+			start = self:GetPos(),
+			endpos = self:GetPos() - Vector(0, 0, self.GroundOffset),
+			filter = {self, ply},
+			mask = MASK_PLAYERSOLID,
+			mins = mins,
+			maxs = maxs
+		})
+
+		ply:SetPos(tr.HitPos)
+		ply:SetEyeAngles(self:GetAngles())
 	end
 end
 

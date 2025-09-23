@@ -1,8 +1,9 @@
 AddCSLuaFile()
 
-if CLIENT then
-	return
+if SERVER then
+	function ENT:BuildHitboxes()
+	end
 end
 
-function ENT:BuildHitboxes()
+function ENT:BuildDamageGroups()
 end

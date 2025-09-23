@@ -101,4 +101,8 @@ if CLIENT then
 
 		return true
 	end
+else
+	function ENT:OnTakeDamage(dmg)
+		self:GetOwner():TakeMechDamage(self:GetHitboxIndex(), dmg)
+	end
 end

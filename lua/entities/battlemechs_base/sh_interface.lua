@@ -35,6 +35,9 @@ if CLIENT then
 else
 	function ENT:BuildHitboxes()
 	end
+
+	function ENT:BuildDamageGroups()
+	end
 end
 
 function ENT:CanMove()

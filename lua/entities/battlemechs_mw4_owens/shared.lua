@@ -34,6 +34,8 @@ ENT.SideStep = 10 -- [MoveStat] The amount of side offset that's applied to the 
 ENT.UpStep = {2, 1} -- [MoveStat] The amount of upwards offset that's applied to the gait offset value
 
 -- Misc fields
+ENT.BaseHealth = 2000
+
 ENT.DrawRadius = 200 -- The radius that's added on top of ENT.Hull to determine the mech's render bounds
 ENT.FootstepSound = "MW4.Footstep.Small"
 
