@@ -24,8 +24,8 @@ end
 
 function ENT:OnStepStart(index, leg) end
 function ENT:OnStepFinish(index, leg)
-	if SERVER then
-		sound.Play(")sfx_footfall_generic.wav", leg.Pos, 100, math.Rand(95, 105))
+	if SERVER and self.FootstepSound then
+		self:PlaySound(leg.Pos + leg.Normal, self.FootstepSound)
 	end
 end
 
@@ -35,4 +35,14 @@ if CLIENT then
 else
 	function ENT:BuildHitboxes()
 	end
+end
+
+function ENT:CanMove()
+	return self:HasDriver()
+end
+
+function ENT:CanAim(bone, config)
+	local ply = self:GetDriver()
+
+	return IsValid(ply) and not ply:KeyDown(IN_WALK)
 end

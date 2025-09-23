@@ -60,3 +60,21 @@ if CLIENT then
 		return data
 	end
 end
+
+sound.Add({
+	name = "MW4.Footstep.Small",
+	channel = CHAN_STATIC,
+	volume = 1,
+	level = 110,
+	pitch = {95, 105},
+	sound = ")battlemechs/mw4/footstep_small.wav"
+})
+
+sound.Add({
+	name = "MW4.Footstep.Large",
+	channel = CHAN_STATIC,
+	volume = 1,
+	level = 110,
+	pitch = {95, 105},
+	sound = ")battlemechs/mw4/footstep_large.wav"
+})

@@ -56,6 +56,7 @@ ENT.ThirdPersonSettings = {
 
 -- Misc fields
 ENT.DrawRadius = 200 -- The radius that's added on top of ENT.Hull to determine the mech's render bounds
+ENT.FootstepSound = "MW4.Footstep.Small"
 
 ENT.DrawDriver = {
 	Enabled = false,
