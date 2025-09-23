@@ -35,6 +35,9 @@ ENT.UpStep = {2, 1} -- [MoveStat] The amount of upwards offset that's applied to
 
 -- Misc fields
 ENT.DrawRadius = 200 -- The radius that's added on top of ENT.Hull to determine the mech's render bounds
+ENT.FootstepSound = "MW4.Footstep.Small"
+
+-- Custom fields
 
 ENT.UpperLength = 38
 ENT.LowerLength = 85
