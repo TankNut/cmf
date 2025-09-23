@@ -88,14 +88,10 @@ function ENT:GetTurretAngle(bone, config, ang, forwardAngle)
 		return config.Callback(self, bone)
 	else
 		if self:CanAim(bone, config) then
-			if config.Torso and self:ShouldLockTorso() then
-				return ang + forwardAngle
-			else
-				local target = (self.BoneTrace.HitPos - bone.Pos):Angle()
-				target:Normalize()
+			local target = (self.BoneTrace.HitPos - bone.Pos):Angle()
+			target:Normalize()
 
-				return target
-			end
+			return target
 		else
 			return self:GetFallbackTurretAngle(bone, config, ang, forwardAngle)
 		end
