@@ -45,7 +45,7 @@ function ENT:BuildBones()
 	self:AddBone("Chin", {
 		Parent = "Torso",
 		Offset = {
-			Pos = Vector(70, 0, 1)
+			Pos = Vector(70, 0, 2)
 		},
 		Turret = {
 			NetworkVar = "ChinAngle",
