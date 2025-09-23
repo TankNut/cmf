@@ -32,7 +32,9 @@ function ENT:CreatePartEntity(part)
 end
 
 function ENT:DrawParts(flags, renderGroup)
-	if self.FirstPersonSettings.HideParts and LocalPlayer() == self:GetDriver() and not self:GetSeat():GetThirdPersonMode() then
+	local lp = LocalPlayer()
+
+	if self.FirstPersonSettings.HideParts and lp == self:GetDriver() and not self:GetSeat():GetThirdPersonMode() and lp:GetViewEntity() == lp then
 		return
 	end
 
