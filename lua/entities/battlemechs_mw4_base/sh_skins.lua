@@ -130,6 +130,7 @@ properties.Add("battlemechs_mw4_skin", {
 	MenuOpen = function(self, option, ent, tr)
 		local submenu = option:AddSubMenu()
 		local categories = {}
+		local activeChoice
 
 		local current = ent:GetSkinIndex()
 
@@ -147,12 +148,22 @@ properties.Add("battlemechs_mw4_skin", {
 
 			local choice = target:AddOption(v.Name)
 			choice:SetRadio(true)
-			choice:SetChecked(current == index)
 			choice:SetIsCheckable(true)
+
+			if current == index then
+				choice:SetChecked(true)
+				activeChoice = choice
+			end
 
 			choice.OnChecked = function(_, checked)
 				if checked then
 					self:SetSkin(ent, index)
+
+					if IsValid(activeChoice) and activeChoice != choice then
+						activeChoice:SetChecked(false)
+					end
+
+					activeChoice = choice
 				end
 			end
 		end
