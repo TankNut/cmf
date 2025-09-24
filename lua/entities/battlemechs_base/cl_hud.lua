@@ -1,7 +1,22 @@
-function ENT:HUDPaint()
-	if not IsValid(self.HUD) and self:GetDriver() == LocalPlayer() then
-		self.HUD = vgui.Create("DBattlemechs_HUD_MW4")
-		self.HUD:SetMech(self)
+function ENT:InitHUD()
+	self.ActiveHUD = battlemechs.HUDList.mw4
+	self.ActiveHUD:Init()
+end
+
+function ENT:DestroyHUD()
+	if self.ActiveHUD then
+		self.ActiveHUD:Destroy()
+		self.ActiveHUD = nil
+	end
+end
+
+function ENT:UpdateHUD()
+	local isDriving = self:GetDriver() == LocalPlayer()
+
+	if isDriving and not self.ActiveHUD then
+		self:InitHUD()
+	elseif not isDriving and self.ActiveHUD then
+		self:DestroyHUD()
 	end
 end
 

@@ -4,16 +4,7 @@ battlemechs = battlemechs or {}
 
 include("sh_convars.lua")
 include("sh_hooks.lua")
-
-AddCSLuaFile("panels/mw4/_hud.lua")
-AddCSLuaFile("panels/mw4/_skin.lua")
-AddCSLuaFile("panels/mw4/cl_panel.lua")
-
-if CLIENT then
-	include("panels/mw4/_hud.lua")
-	include("panels/mw4/_skin.lua")
-	include("panels/mw4/cl_panel.lua")
-end
+include("sh_hud.lua")
 
 function battlemechs:GetMech(ply)
 	return ply:GetNWEntity("battlemechs.mech")

@@ -163,6 +163,7 @@ function ENT:Think()
 
 	if CLIENT then
 		self:UpdateThirdPerson()
+		self:UpdateHUD()
 	end
 
 	self:NextThink(CurTime())
@@ -255,6 +256,7 @@ function ENT:OnRemove()
 
 	if CLIENT then
 		self:ClearParts()
+		self:DestroyHUD()
 	end
 end
 
@@ -267,6 +269,7 @@ function ENT:OnReloaded()
 		self.Debug_HitboxCache = nil
 
 		self:InitParts()
+		self:DestroyHUD()
 	end
 end
 
