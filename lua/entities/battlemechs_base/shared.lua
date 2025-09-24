@@ -81,10 +81,12 @@ include("sh_view.lua")
 include("sh_interface.lua")
 
 AddCSLuaFile("cl_debug.lua")
+AddCSLuaFile("cl_hud.lua")
 AddCSLuaFile("cl_parts.lua")
 
 if CLIENT then
 	include("cl_debug.lua")
+	include("cl_hud.lua")
 	include("cl_parts.lua")
 end
 

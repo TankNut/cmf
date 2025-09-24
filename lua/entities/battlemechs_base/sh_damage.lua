@@ -25,14 +25,14 @@ function ENT:AddDamageGroup(name, health, bones)
 
 	self.DamagePool = self.DamagePool + health
 
-	self:NetworkVar("Float", "DamageGroup" .. index)
+	self:NetworkVar("Int", "DamageGroup" .. index)
 
 	for _, bone in ipairs(bones) do
 		self.DamageMap[bone] = index
 	end
 end
 
-function ENT:GetMechGroupHealth(tab)
+function ENT:GetMechHealth(tab)
 	if not tab then
 		tab = {}
 	end
@@ -44,7 +44,7 @@ function ENT:GetMechGroupHealth(tab)
 	return tab
 end
 
-function ENT:GetMechHealth()
+function ENT:GetTotalMechHealth()
 	local health = 0
 
 	for i = 1, #self.DamageGroups do
@@ -56,9 +56,15 @@ end
 
 if SERVER then
 	function ENT:TakeMechDamage(bone, dmg)
-		local index = assert(self.DamageMap[bone], "Bone " .. bone .. " is not tied to a damage group!")
+		local index = assert(self.DamageMap[bone], "Bone '" .. bone .. "' is not tied to a damage group!")
 		local health = self["GetDamageGroup" .. index](self)
 
-		self["SetDamageGroup" .. index](self, health - dmg:GetDamage())
+		local newHealth = math.ceil(health - dmg:GetDamage())
+
+		if health == newHealth or health == 0 then
+			return
+		end
+
+		self["SetDamageGroup" .. index](self, newHealth)
 	end
 end

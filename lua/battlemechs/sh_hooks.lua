@@ -31,6 +31,9 @@ if CLIENT then
 	battlemechs:Hook("CalcView")
 	battlemechs:Hook("PrePlayerDraw")
 	battlemechs:Hook("PostPlayerDraw")
+
+	battlemechs:HookLocal("HUDPaint")
+	battlemechs:HookLocal("HUDShouldDraw")
 else
 	hook.Add("PlayerEnteredVehicle", "battlemechs", function(ply, vehicle)
 		local mech = vehicle._battlemech
