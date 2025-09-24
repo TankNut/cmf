@@ -18,7 +18,13 @@ battlemechs:Hook("PlayerButtonUp")
 if CLIENT then
 	function battlemechs:HookLocal(name)
 		hook.Add(name, "battlemechs", function(...)
-			local mech = self:GetMech(LocalPlayer())
+			local lp = LocalPlayer()
+
+			if not IsValid(lp) then
+				return
+			end
+
+			local mech = self:GetMech(lp)
 
 			if not IsValid(mech) or not mech[name] then
 				return
