@@ -187,6 +187,7 @@ function ENT:FindGround(offset, maxLength)
 			mins = Vector(-5, -5, 0),
 			maxs = Vector(5, 5, 0),
 			filter = function(ent) return ent != self and ent:GetOwner() != self end,
+			collisiongroup = COLLISION_GROUP_WEAPON,
 			output = result
 		}
 	end
