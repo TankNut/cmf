@@ -75,7 +75,6 @@ include("sh_helpers.lua")
 include("sh_hitboxes.lua")
 include("sh_ik.lua")
 include("sh_movement.lua")
-include("sh_physics.lua")
 include("sh_view.lua")
 
 include("sh_interface.lua")
@@ -118,6 +117,24 @@ function ENT:Initialize()
 		hook.Add("PreDrawHUD", self, self.PreDrawHUD)
 	else
 		self:CreateSeat()
+	end
+end
+
+function ENT:InitPhysics()
+	if IsValid(self.PhysCollide) then
+		self.PhysCollide:Destroy()
+	end
+
+	local mins = self.Hull.Mins
+	local maxs = self.Hull.Maxs
+
+	self:EnableCustomCollisions(true)
+	self:SetCollisionBounds(mins, maxs)
+	self.PhysCollide = CreatePhysCollideBox(mins, maxs)
+
+	if SERVER then
+		self:PhysicsInitBox(mins, maxs, "solidmetal")
+		self:SetSolid(SOLID_VPHYSICS)
 	end
 end
 
@@ -231,19 +248,6 @@ function ENT:GetLookAng()
 	return ply:LocalEyeAngles()
 end
 
-function ENT:GetGroundTrace()
-	local pos = self:GetPos()
-
-	return util.TraceHull({
-		start = pos,
-		endpos = pos - Vector(0, 0, 56756),
-		filter = self,
-		collisiongroup = COLLISION_GROUP_WEAPON,
-		mins = Vector(-10, -10, 0),
-		maxs = Vector(10, 10, 0)
-	})
-end
-
 function ENT:OnRemove()
 	if self.PhysCollide then
 		self.PhysCollide:Destroy()
@@ -309,4 +313,31 @@ if CLIENT then
 	function ENT:DrawTranslucent(flags)
 		self:DrawParts(flags, RENDERGROUP_TRANSLUCENT)
 	end
+end
+
+-- CONTENTS_GRATE runs for physguns but not for bullets
+-- CONTENTS_HITBOX runs for bullets but not for physguns
+
+function ENT:TestCollision(start, delta, isbox, extends, mask)
+	if bit.band(mask, CONTENTS_GRATE) == 0 or not IsValid(self.PhysCollide) then
+		return
+	end
+
+	local max = extends
+	local min = -extends
+
+	max.z = max.z - min.z
+	min.z = 0
+
+	local hit, norm, frac = self.PhysCollide:TraceBox(self:GetPos(), self:GetAngles(), start, start + delta, min, max)
+
+	if not hit then
+		return
+	end
+
+	return {
+		HitPos = hit,
+		Normal = norm,
+		Fraction = frac
+	}
 end

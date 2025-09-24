@@ -21,6 +21,19 @@ function ENT:GetDesiredMoveSpeed(ply)
 	return ply:KeyDown(IN_SPEED) and self.RunSpeed or self.WalkSpeed
 end
 
+function ENT:GetGroundTrace()
+	local pos = self:GetPos()
+
+	return util.TraceHull({
+		start = pos,
+		endpos = pos - Vector(0, 0, 56756),
+		filter = self,
+		collisiongroup = COLLISION_GROUP_WEAPON,
+		mins = Vector(-10, -10, 0),
+		maxs = Vector(10, 10, 0)
+	})
+end
+
 if SERVER then
 	function ENT:CheckGround()
 		local data = self.MoveData
