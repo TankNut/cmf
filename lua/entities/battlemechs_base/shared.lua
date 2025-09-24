@@ -183,7 +183,6 @@ if SERVER then
 		end
 
 		ply:EnterVehicle(self.Seat)
-
 	end
 
 	function ENT:OnEnter(ply)
